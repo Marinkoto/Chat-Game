@@ -12,14 +12,14 @@ public class Player : MonoBehaviour, IDamagable
     [Header("Components")]
     [SerializeField] Button[] phraseButtons;
     [SerializeField] Image[] phraseIcons;
-    [SerializeField] List<Phrase> phraseList;
     [SerializeField] Animator animator;
     [SerializeField] public Enemy enemy;
     [SerializeField] Slider healthBar;
+    [SerializeField] Image iconImage;
+    [Header("References")]
+    [SerializeField] CharacterData selectedCharacter;
+
     [HideInInspector] public bool phraseSelected = false;
-    [Header("Parameters")]
-    [SerializeField] int health;
-    [SerializeField] int maxHealth;
 
     private void Start()
     {
@@ -28,12 +28,13 @@ public class Player : MonoBehaviour, IDamagable
             int index = i;
             phraseButtons[i].onClick.AddListener(() => SelectPhrase(index));
         }
+        selectedCharacter = CharacterManager.instance.selectedCharacter;
         GetNewPhrases();
         SetHUD();
     }
     public void SelectPhrase(int index)
     {
-        Phrase newPhrase = phraseList[index];
+        Phrase newPhrase = selectedCharacter.phrases[index];
         ManagePanel(false);
         if (newPhrase.type == PhraseType.ATTACK)
         {
@@ -50,12 +51,12 @@ public class Player : MonoBehaviour, IDamagable
     }
     public void GetNewPhrases()
     {
-        phraseList.Shuffle();
-        int phraseCount = Mathf.Min(phraseButtons.Length, phraseList.Count);
+        selectedCharacter.phrases.Shuffle();
+        int phraseCount = Mathf.Min(phraseButtons.Length, selectedCharacter.phrases.Count);
         for (int i = 0; i < phraseCount; i++)
         {
-            phraseButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = phraseList[i].phrase;
-            phraseIcons[i].sprite = phraseList[i].icon;
+            phraseButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = selectedCharacter.phrases[i].phrase;
+            phraseIcons[i].sprite = selectedCharacter.phrases[i].icon;
         }
     }
 
@@ -65,26 +66,27 @@ public class Player : MonoBehaviour, IDamagable
     }
     public void TakeDamage(int damage)
     {
-        health -= damage;
-        if (health <= 0)
+        selectedCharacter.health -= damage;
+        if (selectedCharacter.health <= 0)
             Die();
     }
 
     public void ReturnHealth(int healthToReturn)
     {
-        if (health + healthToReturn > maxHealth)
+        if (selectedCharacter.health + healthToReturn > selectedCharacter.maxHealth)
         {
-            health = maxHealth;
+            selectedCharacter.health = selectedCharacter.maxHealth;
         }
         else
         {
-            health += healthToReturn;
+            selectedCharacter.health += healthToReturn;
         }
     }
     public void SetHUD()
     {
-        healthBar.value = health;
-        healthBar.maxValue = maxHealth;
+        healthBar.value = selectedCharacter.health;
+        healthBar.maxValue = selectedCharacter.maxHealth;
+        iconImage.sprite = selectedCharacter.icon;
     }
     public void Die()
     {

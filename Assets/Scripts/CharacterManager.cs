@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using TMPro;
+using System;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -22,24 +23,55 @@ public class CharacterManager : MonoBehaviour
     [Header("Character Selection")]
     [SerializeField] Button[] characterOptions;
 
+    public static CharacterManager instance;
+
     private int currentIndex = 0;
+    private void OnDisable()
+    {
+        SavingSystem.SaveCharacter(characters[currentIndex]);
+    }
+
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(instance);
+        }
+    }
 
     void Start()
     {
+        for (int i = 0; i < characterOptions.Length; i++)
+        {
+            int index = i;
+            characterOptions[i].onClick.AddListener(() => SelectCharacter(index));
+        }
         if (characters.Count > 0)
         {
             UpdateCarousel();
         }
+        SavingSystem.LoadCharacter(characters[currentIndex].name);
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void UpdateStats(CharacterData currentCharacter)
+    {
+        statsText.text = $"{currentCharacter.name}\n" +
+            $"Health: {currentCharacter.maxHealth}\n" +
+            $"Combat Power";
     }
 
     private void UpdateCarousel()
     {
         CharacterData currentCharacter = characters[currentIndex];
 
-        statsText.text = $"{currentCharacter.name}\n" +
-            $"Health: {currentCharacter.maxHealth}\n" +
-            $"Combat Power";
-
+        currentCharacter = SavingSystem.LoadCharacter(currentCharacter.name);
+        currentCharacter ??= characters[currentIndex];
+        UpdateStats(currentCharacter);
         if (currentCharacter.icon != null)
         {
             mainImage.sprite = currentCharacter.icon;
@@ -54,7 +86,6 @@ public class CharacterManager : MonoBehaviour
         {
             previousImage.sprite = previousCharacter.icon;
             previousImage.color = new Color(1f, 1f, 1f, 0.5f);
-            previousImage.transform.localScale = new Vector3(0.5f, 0.5f);
         }
 
         CharacterData nextCharacter = characters[nextIndex];
@@ -62,10 +93,10 @@ public class CharacterManager : MonoBehaviour
         {
             nextImage.sprite = nextCharacter.icon;
             nextImage.color = new Color(1f, 1f, 1f, 0.5f);
-            nextImage.transform.localScale = new Vector3(0.5f, 0.5f);
         }
 
         mainImage.color = Color.white;
+        SavingSystem.SaveCharacter(currentCharacter);
     }
 
     public void NextCharacter()
@@ -81,7 +112,14 @@ public class CharacterManager : MonoBehaviour
     }
     public void SelectCharacter(int index)
     {
-        CharacterData selectedCharacter = characters[index];
-        //TODO
+        CharacterData character = characters[index];
+        selectedCharacter = character;
+        SceneSystem.LoadScene(1);
+    }
+    public void UpgradeCharacter()
+    {
+        characters[currentIndex].maxHealth += 1;
+        SavingSystem.SaveCharacter(characters[currentIndex]);
+        UpdateCarousel();
     }
 }
