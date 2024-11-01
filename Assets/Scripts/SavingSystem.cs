@@ -12,6 +12,7 @@ public class SavingSystem
         string json = JsonUtility.ToJson(character);
         string encryptedJson = EncryptionSystem.Encrypt(json, encryptionKey);
         File.WriteAllText(Application.persistentDataPath + "/" + character.name + ".json", encryptedJson);
+        
     }
     public static CharacterData LoadCharacter(string characterName)
     {
@@ -20,9 +21,39 @@ public class SavingSystem
         {
             string encryptedJson = File.ReadAllText(path);
             string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, encryptionKey);
-            return JsonUtility.FromJson<CharacterData>(decryptedJson);
+            CharacterData character = JsonUtility.FromJson<CharacterData>(decryptedJson);
+            character.icon = Resources.Load<Sprite>(character.iconPath);
+            return character;
         }
         return null;
     }
-
+    public static void LoadAllCharacters(List<CharacterData> characters)
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            CharacterData loadedCharacter = LoadCharacter(characters[i].name);
+            if (loadedCharacter != null)
+            {
+                characters[i] = loadedCharacter;
+            }
+        }
+    }
+    public static void SavePlayerData(PlayerData playerData)
+    {
+        string json = JsonUtility.ToJson(playerData);
+        string encryptedJson = EncryptionSystem.Encrypt(json, encryptionKey);
+        File.WriteAllText(Application.persistentDataPath + "/" + PlayerData.saveKey + ".json", encryptedJson);;
+    }
+    public static PlayerData LoadPlayerData(string key)
+    {
+        string path = Application.persistentDataPath + "/" + key + ".json";
+        if (File.Exists(path))
+        {
+            string encryptedJson = File.ReadAllText(path);
+            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, encryptionKey);
+            PlayerData playerData = JsonUtility.FromJson<PlayerData>(decryptedJson);
+            return playerData;
+        }
+        return new PlayerData();
+    }
 }

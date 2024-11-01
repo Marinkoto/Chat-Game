@@ -13,4 +13,8 @@ public class SceneSystem
     {
         return SceneManager.GetActiveScene().buildIndex;
     }
+    public static void ExitGame()
+    {
+        Application.Quit();
+    }
 }

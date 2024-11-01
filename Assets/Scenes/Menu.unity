@@ -504,6 +504,58 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &131438215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 131438217}
+  - component: {fileID: 131438216}
+  m_Layer: 0
+  m_Name: Player Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &131438216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131438215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2794bc6b49491445bebcfc805b6039f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    level: 1
+    maxLevel: 40
+    currentExp: 0
+    expToLevelUp: 0
+    costToLevelUp: 0
+    currency: 5000
+    combatPower: 100
+--- !u!4 &131438217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131438215}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3011754, y: 0.1745534, z: 76.74455}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &217033026
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +929,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -1055,37 +1107,114 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9879e0fc5992c09408e3f3e24e23b912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainImage: {fileID: 757783400}
   iconImage: {fileID: 991797405}
   statsText: {fileID: 964128427}
-  previousImage: {fileID: 416761608}
-  nextImage: {fileID: 1888985270}
   characters:
-  - phrases: []
-    health: 25
-    maxHealth: 25
-    name: Robo-cop
+  - phrases:
+    - {fileID: 11400000, guid: 0e142a08308b6bb4d8174b722a3daab3, type: 2}
+    - {fileID: 11400000, guid: e64dde834e89036438a5dda28d18bdaf, type: 2}
+    - {fileID: 11400000, guid: fd484aeddbc00a94b934a847e424a448, type: 2}
+    - {fileID: 11400000, guid: 5a86c11a3f4491b4289434a9fc4021b2, type: 2}
+    - {fileID: 11400000, guid: fd552ab7ababd594dbb52a1f07f43897, type: 2}
+    - {fileID: 11400000, guid: 75684ca267edb4c4590cce07c690f9f2, type: 2}
+    - {fileID: 11400000, guid: 7713587f4a08817478bcd2433b80e4af, type: 2}
+    - {fileID: 11400000, guid: 757d850c5baec8246ad632b8036afc35, type: 2}
+    - {fileID: 11400000, guid: 6077ea23192931e4a94d8af4abb0fa75, type: 2}
+    - {fileID: 11400000, guid: 747552ff86faa464fbed225b52d6916c, type: 2}
+    - {fileID: 11400000, guid: a374982356e94434a9274fcbabad9227, type: 2}
+    - {fileID: 11400000, guid: 608afa249033a3a478b1208a8e9a5ba0, type: 2}
+    - {fileID: 11400000, guid: 9761a541dd9313a45ba50fdfb1b6a1b7, type: 2}
+    - {fileID: 11400000, guid: eb3f7426b2496f54d8f57f719861832c, type: 2}
+    - {fileID: 11400000, guid: 3682878efb88d6e4f9e996e4d98d7d22, type: 2}
+    - {fileID: 11400000, guid: 393525a435ceeac458f205262b3ecb79, type: 2}
+    - {fileID: 11400000, guid: 89bfd87fe9117a643895401c11d62200, type: 2}
+    - {fileID: 11400000, guid: f4fd286f529c0774aabfdbe902befb21, type: 2}
+    - {fileID: 11400000, guid: 59c094a43dde6124ebdb356731468d4e, type: 2}
+    - {fileID: 11400000, guid: 14f79989bd054084f81f54e578d9acf4, type: 2}
+    health: 75
+    maxHealth: 75
+    combatPower: 250
+    name: Circuit-Breaker V2
+    animatorPath: Animators/Player(Robot)
+    emotionAnimator: {fileID: 0}
+    iconPath: Sprites/Robot Icon
     icon: {fileID: 21300000, guid: b457b4549c17e3945803da873e0ddfac, type: 3}
-  - phrases: []
-    health: 20
-    maxHealth: 20
-    name: Pirate
+  - phrases:
+    - {fileID: 11400000, guid: 5f57c34588004774fa56231d850bbe09, type: 2}
+    - {fileID: 11400000, guid: 6f4140dc5f5f5074b8e4856d89c6d8fd, type: 2}
+    - {fileID: 11400000, guid: 13895a1ee12f5cc45b578abb9aca66c7, type: 2}
+    - {fileID: 11400000, guid: 27bbabb1dab184f4683fab823a3f2e2f, type: 2}
+    - {fileID: 11400000, guid: 31d8cdb72cc9a6b4fb1cc456fec9b4e4, type: 2}
+    - {fileID: 11400000, guid: 196a1dc03a79a7340bff2a8f38e6fc51, type: 2}
+    - {fileID: 11400000, guid: f099e8037ff15264281fad19bdee92e2, type: 2}
+    - {fileID: 11400000, guid: 87a49413c336fe14280327b41d83cbe1, type: 2}
+    - {fileID: 11400000, guid: 22f8903d52ecdc446b1d12289de7d5f3, type: 2}
+    - {fileID: 11400000, guid: 6ad0303684be41d4bb82dc67b93aad05, type: 2}
+    - {fileID: 11400000, guid: ba78a1dc90300cd47aa20a4703faea01, type: 2}
+    - {fileID: 11400000, guid: 175889744f5f44f48bf5ecb9d0210ef6, type: 2}
+    - {fileID: 11400000, guid: bf4fff1862aa596499276d63caedaa6a, type: 2}
+    - {fileID: 11400000, guid: d451299c075993c489dd61eb07d911e5, type: 2}
+    - {fileID: 11400000, guid: ac5fc963246d3994e8fa2dd96bbeec70, type: 2}
+    - {fileID: 11400000, guid: aaced7f5fbcf5464aac5d1df06f80c54, type: 2}
+    - {fileID: 11400000, guid: 67ec193ef77d1694e9a1a2f42cc643fd, type: 2}
+    - {fileID: 11400000, guid: 2077a0727ab50594aa6eee9c52fa27b2, type: 2}
+    - {fileID: 11400000, guid: e4b8a656ea7468f42adf0328d28461b9, type: 2}
+    - {fileID: 11400000, guid: 4c400f8fb92b61d4db2e617a71ca2992, type: 2}
+    health: 60
+    maxHealth: 60
+    combatPower: 250
+    name: Salty Bones McGee
+    animatorPath: Animators/Player(Pirate)
+    emotionAnimator: {fileID: 0}
+    iconPath: Sprites/Pirate Icon
     icon: {fileID: 21300000, guid: c7d172362ae00534083db07a60300ca6, type: 3}
-  - phrases: []
-    health: 20
-    maxHealth: 20
-    name: Monster
+  - phrases:
+    - {fileID: 11400000, guid: 799ecbdd0a319024ca9cf0d9e5e07764, type: 2}
+    - {fileID: 11400000, guid: 6788b6e12ed037740a77fda4a1681501, type: 2}
+    - {fileID: 11400000, guid: 9025fdce2b9d363488ec6c6bb086f5cd, type: 2}
+    - {fileID: 11400000, guid: 70946b9b9afc79f44bda6d6cdf8a2fad, type: 2}
+    - {fileID: 11400000, guid: 65a92662d0382784d86ba78567cc91bb, type: 2}
+    - {fileID: 11400000, guid: eb3c222c4eb6fa94ea8d5cf0b0fdeb6a, type: 2}
+    - {fileID: 11400000, guid: 45de14094d9659c4cb5586358fa4874d, type: 2}
+    - {fileID: 11400000, guid: 7de26e995e5ca8f48af83fe6c44c28f9, type: 2}
+    - {fileID: 11400000, guid: 3c7a6ddcc13075844a55bb1d8599f763, type: 2}
+    - {fileID: 11400000, guid: f15c3f8cff0c0bb47aa678dac178eaec, type: 2}
+    - {fileID: 11400000, guid: c18f0446388ff7c498b66a4f59d7bc65, type: 2}
+    - {fileID: 11400000, guid: de27467d538420c449a14f701a8059c1, type: 2}
+    - {fileID: 11400000, guid: d540ebed749cce54facc51935fa0773f, type: 2}
+    - {fileID: 11400000, guid: efbfbff9a5c763b499c3033b8b509080, type: 2}
+    - {fileID: 11400000, guid: 62ea1efbd07222c4f8a204110f188286, type: 2}
+    - {fileID: 11400000, guid: 02564d6359bdefa4f8beb72d993eba6c, type: 2}
+    - {fileID: 11400000, guid: b2c4dea55b7dc914b8ed70c1d6607120, type: 2}
+    - {fileID: 11400000, guid: d26e290d44f0e4343b7fb04afcffba89, type: 2}
+    - {fileID: 11400000, guid: b1b0685c8c0b77b44bd9ce441f4e1739, type: 2}
+    - {fileID: 11400000, guid: 421270fdfddf34647b2f927885d4422f, type: 2}
+    health: 65
+    maxHealth: 65
+    combatPower: 250
+    name: Murkmaw
+    animatorPath: 
+    emotionAnimator: {fileID: 0}
+    iconPath: Sprites/Monster Icon
     icon: {fileID: 21300000, guid: 127f7cff1d659a14f898c2a28d299a8e, type: 3}
   selectedCharacter:
     phrases: []
     health: 0
     maxHealth: 0
+    combatPower: 0
     name: 
+    animatorPath: 
+    emotionAnimator: {fileID: 0}
+    iconPath: 
     icon: {fileID: 0}
+  playerManager: {fileID: 131438216}
   characterOptions:
   - {fileID: 907661580}
   - {fileID: 217033032}
   - {fileID: 1180733604}
+  nextImage: {fileID: 1888985270}
+  prevImage: {fileID: 416761608}
+  mainImage: {fileID: 757783400}
 --- !u!4 &514061230
 Transform:
   m_ObjectHideFlags: 0
@@ -2573,6 +2702,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266618127}
   m_CullTransparentMesh: 1
+--- !u!1 &1337884143
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1337884145}
+  - component: {fileID: 1337884144}
+  m_Layer: 0
+  m_Name: Experience Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1337884144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337884143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c90a901b2850242a5ddc86590798e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    level: 0
+    maxLevel: 0
+    currentExp: 0
+    expToLevelUp: 0
+    costToLevelUp: 0
+    currency: 0
+    combatPower: 0
+--- !u!4 &1337884145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337884143}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.7038264, y: 1.7369403, z: 116.66732}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1365891935
 GameObject:
   m_ObjectHideFlags: 0

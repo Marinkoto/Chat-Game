@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27ad3006d1c56bb4cbb01f0f01703196, type: 3}
+  m_Name: Attack Phrase 7
+  m_EditorClassIdentifier: 
+  phrase: "\"You\u2019re about to witness true horror!\""
+  type: 1
+  phraseEffect: 21
+  icon: {fileID: -154968644, guid: 878e40d740fb2fa49b975c1fc235b66c, type: 3}

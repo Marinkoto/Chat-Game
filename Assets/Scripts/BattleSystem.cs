@@ -1,85 +1,179 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public enum BattleState { End, PlayerTurn, EnemyTurn }
+
 public class BattleSystem : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Enemy enemy;
     [SerializeField] private Player player;
-    [SerializeField] BattleState state;
-    [SerializeField] List<GameObject> enemies;
+    [SerializeField] public BattleState state;
+    [SerializeField] public List<GameObject> enemies;
+    [SerializeField] public CharacterData selectedCharacter;
 
-    private int currentEnemyIndex = 0;
+    [Header("Player Timer")]
+    [SerializeField] private int enemyIndex = 0;
+    [SerializeField] private readonly float playerTimeLimit = 10f;
+    [SerializeField] private bool playerMadeChoice;
+    [SerializeField] Slider timer;
+
+    [Header("Components")]
+    [SerializeField] GameObject[] effects;
+
+    public static BattleSystem instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(instance);
+        }
+        selectedCharacter = CharacterManager.instance.selectedCharacter;
+    }
     private void Start()
     {
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         state = BattleState.PlayerTurn;
+        player = FindAnyObjectByType<Player>();
+        StartBattleLoop();
         SpawnEnemy();
     }
-    private IEnumerator PlayerTurn()
-    {
-        if (state != BattleState.PlayerTurn)
-            yield return null;
 
-        yield return new WaitForSeconds(2f);
-        player.ManagePanel(true);
-        yield return new WaitUntil(() => player.phraseSelected);
-        enemy.SetHUD();
+    private async void StartBattleLoop()
+    {
+        await Task.Delay(150);
+        while (state != BattleState.End)
+        {
+            if (Time.timeScale == 0)
+            {
+                await WaitUntilGameUnpaused();
+                continue;
+            }
+            if (state == BattleState.PlayerTurn)
+            {
+                await HandlePlayerTurn();
+            }
+            else if (state == BattleState.EnemyTurn)
+            {
+                await HandleEnemyTurn();
+            }
+        }
+    }
+
+    private async Task HandlePlayerTurn()
+    {
+        player.UISystem.ManagePanel(true);
+        playerMadeChoice = false;
+
+        var playerTurnTask = WaitUntilPlayerSelectsPhrase();
+        var timerTask = StartPlayerTimer(playerTimeLimit);
+
+        var completedTask = await Task.WhenAny(playerTurnTask, timerTask);
+
+        if (completedTask == playerTurnTask)
+        {
+            playerMadeChoice = true;
+        }
+
+        player.UISystem.ManagePanel(false);
+
         state = BattleState.EnemyTurn;
     }
-    private IEnumerator EnemyTurn()
-    {
-        if (state != BattleState.EnemyTurn)
-            yield return null;
 
-        enemy.SetHUD();
-        yield return new WaitForSeconds(2f);
-        enemy.ManagePhrase();
-        player.SetHUD();
+    private async Task StartPlayerTimer(float timeLimit)
+    {
+        float timeRemaining = timeLimit;
+        timer.maxValue = timeLimit;
+        timer.value = timeLimit;
+        while (timeRemaining > 0 && !playerMadeChoice)
+        {
+            if (Time.timeScale == 0)
+            {
+                await WaitUntilGameUnpaused();
+                continue;
+            }
+            await Task.Delay(1000);
+            timeRemaining--;
+            timer.value = timeRemaining;
+        }
+
+        if (!playerMadeChoice)
+        {
+            player.phraseSystem.onPhraseSelected.RemoveAllListeners();
+            ChatManager.instance.SystemMessage("Looks like somebody is AFK...");
+        }
+    }
+
+    private Task WaitUntilPlayerSelectsPhrase()
+    {
+        var taskCompletionSource = new TaskCompletionSource<bool>();
+
+        void onPhraseSelected()
+        {
+            taskCompletionSource.SetResult(true);
+            player.phraseSystem.onPhraseSelected.RemoveListener(onPhraseSelected);
+        }
+
+        player.phraseSystem.onPhraseSelected.AddListener(onPhraseSelected);
+
+        return taskCompletionSource.Task;
+    }
+
+    private async Task HandleEnemyTurn()
+    {
+        await Task.Delay(2000);
+
         state = BattleState.PlayerTurn;
-        if (enemy.IsDead())
+        if (enemy.healthSystem.IsDead())
         {
             ManageEnemies();
         }
         else
         {
-            StartCoroutine(PlayerTurn());
+            enemy.phraseSystem.ManagePhrases();
         }
+    }
 
-    }
-    public void OnPhraseSelected()
-    {
-        if (state != BattleState.PlayerTurn)
-            return;
-        StartCoroutine(EnemyTurn());
-    }
     private void ManageEnemies()
     {
-        Destroy(enemies[currentEnemyIndex]);
-        enemies.RemoveAt(currentEnemyIndex);
+        enemies.RemoveAt(enemyIndex);
         if (enemies.Count > 0)
         {
             SpawnEnemy();
-            StartCoroutine(PlayerTurn());
         }
         else
         {
-            Debug.Log("Player Wins!");
+            ChatManager.instance.SystemMessage("You’ve crushed the competition! " +
+                "It's time for your victory dance!");
+            state = BattleState.End;
         }
     }
+
     private void SpawnEnemy()
     {
-        if (currentEnemyIndex >= enemies.Count)
-        {
-            state = BattleState.End;
-            Debug.Log("Player Wins! No more enemies.");
-            return;
-        }
-
-        GameObject newEnemy = Instantiate(enemies[Random.Range(0, enemies.Count)], transform);
+        enemyIndex = Random.Range(0, enemies.Count);
+        GameObject newEnemy = Instantiate(enemies[enemyIndex], transform);
         enemy = newEnemy.GetComponent<Enemy>();
-        enemy.SetHUD();
-        player.enemy = enemy;
+        player.phraseSystem.enemy = enemy.GetComponent<Enemy>();
+    }
+    private async Task WaitUntilGameUnpaused()
+    {
+        while (Time.timeScale == 0)
+        {
+            await Task.Delay(100);
+        }
     }
 }
