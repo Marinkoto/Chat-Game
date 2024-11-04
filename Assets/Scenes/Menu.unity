@@ -1069,9 +1069,8 @@ RectTransform:
   - {fileID: 522553865}
   - {fileID: 1888985269}
   - {fileID: 416761607}
-  - {fileID: 964128426}
   m_Father: {fileID: 763988734}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1133,7 +1132,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 14f79989bd054084f81f54e578d9acf4, type: 2}
     health: 75
     maxHealth: 75
-    combatPower: 250
+    costToUpgrade: 150
     name: Circuit-Breaker V2
     animatorPath: Animators/Player(Robot)
     emotionAnimator: {fileID: 0}
@@ -1162,7 +1161,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 4c400f8fb92b61d4db2e617a71ca2992, type: 2}
     health: 60
     maxHealth: 60
-    combatPower: 250
+    costToUpgrade: 150
     name: Salty Bones McGee
     animatorPath: Animators/Player(Pirate)
     emotionAnimator: {fileID: 0}
@@ -1191,7 +1190,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 421270fdfddf34647b2f927885d4422f, type: 2}
     health: 65
     maxHealth: 65
-    combatPower: 250
+    costToUpgrade: 150
     name: Murkmaw
     animatorPath: 
     emotionAnimator: {fileID: 0}
@@ -1201,12 +1200,13 @@ MonoBehaviour:
     phrases: []
     health: 0
     maxHealth: 0
-    combatPower: 0
+    costToUpgrade: 150
     name: 
     animatorPath: 
     emotionAnimator: {fileID: 0}
     iconPath: 
     icon: {fileID: 0}
+  upgradeButton: {fileID: 1952452863}
   playerManager: {fileID: 131438216}
   characterOptions:
   - {fileID: 907661580}
@@ -1491,6 +1491,7 @@ RectTransform:
   m_Children:
   - {fileID: 274480214}
   - {fileID: 223223928}
+  - {fileID: 964128426}
   - {fileID: 484632057}
   - {fileID: 1952452860}
   - {fileID: 1266618128}
@@ -2101,17 +2102,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 964128425}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 484632057}
-  m_RootOrder: 4
+  m_Father: {fileID: 763988734}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -5.3, y: 148.91}
+  m_AnchoredPosition: {x: -9, y: 148.91}
   m_SizeDelta: {x: 555.01, y: 297.83}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &964128427
@@ -2168,7 +2169,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2568,7 +2569,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 763988734}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3055,9 +3056,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'personas
-
-'
+  m_text: arsenal
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c566624a9a5b360429639585e4b56eec, type: 2}
   m_sharedMaterial: {fileID: 1131642382928871773, guid: c566624a9a5b360429639585e4b56eec, type: 2}
@@ -3889,12 +3888,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 763988734}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -431, y: -46}
-  m_SizeDelta: {x: 420.99, y: 50}
+  m_AnchoredPosition: {x: -338, y: -66}
+  m_SizeDelta: {x: 618.36, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1952452861
 Animator:
@@ -3993,7 +3992,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Upgrade
+  m_text: Upgrade 150
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e03ce7b0c9cb3aa4eb91e6b76fc188ea, type: 2}
   m_sharedMaterial: {fileID: -6962172117558655520, guid: e03ce7b0c9cb3aa4eb91e6b76fc188ea, type: 2}

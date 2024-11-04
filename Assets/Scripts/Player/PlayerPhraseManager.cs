@@ -10,6 +10,7 @@ public class PlayerPhraseManager : MonoBehaviour
     [HideInInspector] public CharacterData selectedCharacter;
     [SerializeField] public PlayerHealth healthSystem;
     [SerializeField] PlayerUIManager UISystem;
+    [SerializeField] public UserData data;
 
     [HideInInspector] public UnityEvent onPhraseSelected = new UnityEvent();
 
@@ -18,7 +19,7 @@ public class PlayerPhraseManager : MonoBehaviour
         selectedCharacter = CharacterManager.instance.selectedCharacter;
         healthSystem = GetComponent<PlayerHealth>();
         UISystem = GetComponent<PlayerUIManager>();
-
+        data = SavingSystem.LoadPlayerData(UserData.saveKey);
         for (int i = 0; i < UISystem.phraseButtons.Length; i++)
         {
             int index = i;
@@ -40,7 +41,7 @@ public class PlayerPhraseManager : MonoBehaviour
                 healthSystem.ReturnHealth(newPhrase.phraseEffect);
                 break;
             case PhraseType.ATTACK:
-                enemy.healthSystem.TakeDamage((int)(Mathf.RoundToInt(newPhrase.phraseEffect * selectedCharacter.combatPower) * 0.01f));
+                enemy.healthSystem.TakeDamage((int)(Mathf.RoundToInt(newPhrase.phraseEffect * data.combatPower) * 0.01f));
                 break;
             case PhraseType.BUFF:
                 BattleSystem.instance.state = BattleState.PlayerTurn;

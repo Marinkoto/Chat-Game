@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     [SerializeField] public PlayerHealth healthSystem;
     [SerializeField] public PlayerPhraseManager phraseSystem;
     [SerializeField] public PlayerUIManager UISystem;
+    [SerializeField] public UserData data;
 
     private void Start()
     {

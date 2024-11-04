@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerData
+public class UserData
 {
     [Header("Level Data")]
     [SerializeField] public int level = 1;
@@ -14,6 +14,6 @@ public class PlayerData
     [Header("Currency Data")]
     [SerializeField] public int currency = 5000;
     [Header("Game Data")]
-    [SerializeField] public int combatPower = 100;
+    [SerializeField] public int combatPower = 250;
     [SerializeField] public static string saveKey = "PlayerSettings";
 }

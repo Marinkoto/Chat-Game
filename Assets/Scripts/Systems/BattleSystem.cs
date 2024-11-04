@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-public enum BattleState { End, PlayerTurn, EnemyTurn }
+public enum BattleState { End, PlayerTurn, EnemyTurn, Paused }
 
 public class BattleSystem : MonoBehaviour
 {
@@ -49,7 +50,9 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PlayerTurn;
         player = FindAnyObjectByType<Player>();
         StartBattleLoop();
+        EnemyUpdate();
         SpawnEnemy();
+        
     }
 
     private async void StartBattleLoop()
@@ -57,16 +60,11 @@ public class BattleSystem : MonoBehaviour
         await Task.Delay(150);
         while (state != BattleState.End)
         {
-            if (Time.timeScale == 0)
-            {
-                await WaitUntilGameUnpaused();
-                continue;
-            }
-            if (state == BattleState.PlayerTurn)
+            if (state == BattleState.PlayerTurn && !PauseMenu.isPaused)
             {
                 await HandlePlayerTurn();
             }
-            else if (state == BattleState.EnemyTurn)
+            else if (state == BattleState.EnemyTurn && !PauseMenu.isPaused)
             {
                 await HandleEnemyTurn();
             }
@@ -100,11 +98,6 @@ public class BattleSystem : MonoBehaviour
         timer.value = timeLimit;
         while (timeRemaining > 0 && !playerMadeChoice)
         {
-            if (Time.timeScale == 0)
-            {
-                await WaitUntilGameUnpaused();
-                continue;
-            }
             await Task.Delay(1000);
             timeRemaining--;
             timer.value = timeRemaining;
@@ -157,7 +150,7 @@ public class BattleSystem : MonoBehaviour
         else
         {
             ChatManager.instance.SystemMessage("You’ve crushed the competition! " +
-                "It's time for your victory dance!");
+                "It's time for your dance!");
             state = BattleState.End;
         }
     }
@@ -169,11 +162,13 @@ public class BattleSystem : MonoBehaviour
         enemy = newEnemy.GetComponent<Enemy>();
         player.phraseSystem.enemy = enemy.GetComponent<Enemy>();
     }
-    private async Task WaitUntilGameUnpaused()
+    private void EnemyUpdate()
     {
-        while (Time.timeScale == 0)
-        {
-            await Task.Delay(100);
-        }
+        ListUtils.Shuffle(enemies);
+        enemies.RemoveRange(0, enemies.Count - player.data.level);
+    }
+    private void EndGame()
+    {
+        ExperienceManager.instance.AddExperience(player.data.level * 150);
     }
 }

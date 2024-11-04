@@ -1761,7 +1761,7 @@ MonoBehaviour:
     phrases: []
     health: 0
     maxHealth: 0
-    combatPower: 0
+    costToUpgrade: 150
     name: 
     animatorPath: 
     emotionAnimator: {fileID: 0}
@@ -1769,6 +1769,14 @@ MonoBehaviour:
     icon: {fileID: 0}
   healthSystem: {fileID: 691371688}
   UISystem: {fileID: 691371690}
+  data:
+    level: 1
+    maxLevel: 40
+    currentExp: 0
+    expToLevelUp: 150
+    costToLevelUp: 500
+    currency: 5000
+    combatPower: 100
   onPhraseSelected:
     m_PersistentCalls:
       m_Calls: []
@@ -2624,11 +2632,21 @@ MonoBehaviour:
   - {fileID: 7354319205170284212, guid: 9aa11213cb5213b4db2e0c39d3dd09a1, type: 3}
   - {fileID: 7354319205170284212, guid: f283cae8f7153ac4789666cfbab33454, type: 3}
   - {fileID: 7354319205170284212, guid: edd47b317d429b44f8529160ce383295, type: 3}
+  - {fileID: 7354319205170284212, guid: 3d59c73809385bd478f7ee67c03c53ba, type: 3}
+  - {fileID: 7354319205170284212, guid: fd349f9ceb63947458c8bb4882ba144d, type: 3}
+  - {fileID: 7354319205170284212, guid: 55f71bbfb387c304f8271d9f0c445559, type: 3}
+  - {fileID: 7354319205170284212, guid: d7e1dcc0447dfba418a447e2815921cd, type: 3}
+  - {fileID: 7354319205170284212, guid: 8fa525f364110334c93e00ac35aa7c86, type: 3}
+  - {fileID: 7354319205170284212, guid: 89762c17c7a8f764abe7fc8b46335343, type: 3}
+  - {fileID: 7354319205170284212, guid: 86c38236e7e7e6643b68099aa3b0ceca, type: 3}
+  - {fileID: 7354319205170284212, guid: 4c6c8fe9b7315e841aaaea691e7e4dc0, type: 3}
+  - {fileID: 7354319205170284212, guid: 834aadee3233cb641bf38d07b9bdea9d, type: 3}
+  - {fileID: 7354319205170284212, guid: b177ad002bc3b9245a9095a6c0481528, type: 3}
   selectedCharacter:
     phrases: []
     health: 0
     maxHealth: 0
-    combatPower: 0
+    costToUpgrade: 150
     name: 
     animatorPath: 
     emotionAnimator: {fileID: 0}

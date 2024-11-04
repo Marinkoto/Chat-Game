@@ -14,9 +14,10 @@ public class CharacterManager : MonoBehaviour
     [Header("Character Data")]
     [SerializeField] private List<CharacterData> characters;
     [SerializeField] public CharacterData selectedCharacter;
+    [SerializeField] TextMeshProUGUI upgradeButton;
 
-    [Header("Character Data")]
-    [SerializeField] PlayerManager playerManager;
+    [Header("Player Data")]
+    [SerializeField] UserManager playerManager;
 
     [Header("Character Selection")]
     [SerializeField] Button[] characterOptions;
@@ -69,8 +70,8 @@ public class CharacterManager : MonoBehaviour
     public void UpdateStats(CharacterData currentCharacter)
     {
         statsText.text = $"{currentCharacter.name}\n" +
-            $"Health: {currentCharacter.maxHealth}\n" +
-            $"Combat Power: {currentCharacter.combatPower}";
+            $"Health: {currentCharacter.maxHealth}\n";
+        upgradeButton.text = $"Upgrade {currentCharacter.costToUpgrade}";
     }
 
     private void UpdateCarousel()
@@ -122,13 +123,14 @@ public class CharacterManager : MonoBehaviour
     }
     public void UpgradeCharacter()
     {
-        if (!CurrencyManager.HasCurrency(playerManager.data, 50))
+        if (!CurrencyManager.HasCurrency(playerManager.data, characters[currentIndex].costToUpgrade))
         {
             return;
         }
-        CurrencyManager.RemoveCurrency(50, playerManager.data);
+        CurrencyManager.RemoveCurrency(characters[currentIndex].costToUpgrade, playerManager.data);
         characters[currentIndex].maxHealth += 1;
-        characters[currentIndex].combatPower += 1;
+        playerManager.data.combatPower += 1;
+        characters[currentIndex].costToUpgrade += 50;
         SavingSystem.SaveCharacter(characters[currentIndex]);
         UpdateCarousel();
     }

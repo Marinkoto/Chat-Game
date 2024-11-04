@@ -34,7 +34,6 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     {
         ChatManager.instance.SystemMessage("Looks like you've been defeated... but hey, at least you tried XD!");
         BattleSystem.instance.state = BattleState.End;
-        PlayerData data = SavingSystem.LoadPlayerData("PlayerSettings");
-        ExperienceManager.instance.AddExperience(data.level * 150);
+        UserData data = SavingSystem.LoadPlayerData("PlayerSettings");
     }
 }

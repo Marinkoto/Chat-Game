@@ -38,22 +38,22 @@ public class SavingSystem
             }
         }
     }
-    public static void SavePlayerData(PlayerData playerData)
+    public static void SavePlayerData(UserData playerData)
     {
         string json = JsonUtility.ToJson(playerData);
         string encryptedJson = EncryptionSystem.Encrypt(json, encryptionKey);
-        File.WriteAllText(Application.persistentDataPath + "/" + PlayerData.saveKey + ".json", encryptedJson);;
+        File.WriteAllText(Application.persistentDataPath + "/" + UserData.saveKey + ".json", encryptedJson);;
     }
-    public static PlayerData LoadPlayerData(string key)
+    public static UserData LoadPlayerData(string key)
     {
         string path = Application.persistentDataPath + "/" + key + ".json";
         if (File.Exists(path))
         {
             string encryptedJson = File.ReadAllText(path);
             string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, encryptionKey);
-            PlayerData playerData = JsonUtility.FromJson<PlayerData>(decryptedJson);
+            UserData playerData = JsonUtility.FromJson<UserData>(decryptedJson);
             return playerData;
         }
-        return new PlayerData();
+        return new UserData();
     }
 }

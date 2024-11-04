@@ -9,7 +9,7 @@ public class CharacterData
     [SerializeField] public List<Phrase> phrases;
     [SerializeField] public int health;
     [SerializeField] public int maxHealth;
-    [SerializeField] public int combatPower;
+    [SerializeField] public int costToUpgrade = 150;
     [Header("Info")]
     [SerializeField, TextArea] public string @name;
     [Header("Visuals")]

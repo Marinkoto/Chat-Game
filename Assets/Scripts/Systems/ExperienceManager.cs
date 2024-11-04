@@ -5,7 +5,7 @@ using UnityEngine;
 public class ExperienceManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] PlayerData data;
+    [SerializeField] UserData data;
     
     /// <summary>
     /// Observer pattern following also singleton representation
@@ -28,7 +28,7 @@ public class ExperienceManager : MonoBehaviour
 
     public void Initialize()
     {
-        data = SavingSystem.LoadPlayerData(PlayerData.saveKey);
+        data = SavingSystem.LoadPlayerData(UserData.saveKey);
         DontDestroyOnLoad(gameObject);
     }
 

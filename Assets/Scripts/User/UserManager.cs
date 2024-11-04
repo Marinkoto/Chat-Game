@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class UserManager : MonoBehaviour
 {
     [Header("Player Data")]
-    [SerializeField] public PlayerData data;
+    [SerializeField] public UserData data;
 
     private void OnDisable()
     {
@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        data = SavingSystem.LoadPlayerData(PlayerData.saveKey);
+        data = SavingSystem.LoadPlayerData(UserData.saveKey);
 
         ExperienceManager.instance.OnExperienceChange += HandleExperienceChange;
     }
