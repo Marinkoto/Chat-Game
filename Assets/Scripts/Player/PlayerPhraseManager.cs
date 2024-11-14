@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(PlayerUIManager), typeof(PlayerHealth))]
 public class PlayerPhraseManager : MonoBehaviour
 {
     [Header("Components")]
-    public Enemy enemy;
+    public static Enemy enemy;
     [Header("References")]
     [HideInInspector] public CharacterData selectedCharacter;
-    [SerializeField] public PlayerHealth healthSystem;
-    [SerializeField] PlayerUIManager UISystem;
+    [HideInInspector] public PlayerHealth healthSystem;
+    [HideInInspector] PlayerUIManager UISystem;
     [SerializeField] public UserData data;
 
     [HideInInspector] public UnityEvent onPhraseSelected = new UnityEvent();

@@ -13,8 +13,6 @@ public class CharacterData
     [Header("Info")]
     [SerializeField, TextArea] public string @name;
     [Header("Visuals")]
-    [SerializeField] public string animatorPath;
-    [SerializeField] public Animator emotionAnimator;
     [SerializeField] public string iconPath;
     [HideInInspector] public Sprite icon;
 }

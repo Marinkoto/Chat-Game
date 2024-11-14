@@ -1,12 +1,12 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerPhraseManager), typeof(PlayerHealth), typeof(PlayerUIManager))]
 public class Player : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] public PlayerHealth healthSystem;
     [SerializeField] public PlayerPhraseManager phraseSystem;
     [SerializeField] public PlayerUIManager UISystem;
-    [SerializeField] public UserData data;
 
     private void Start()
     {

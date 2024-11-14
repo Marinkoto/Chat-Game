@@ -6,27 +6,21 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-public enum BattleState { End, PlayerTurn, EnemyTurn, Paused }
+public enum BattleState { End, PlayerTurn, EnemyTurn }
 
 public class BattleSystem : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Enemy enemy;
-    [SerializeField] private Player player;
     [SerializeField] public BattleState state;
-    [SerializeField] public List<GameObject> enemies;
-    [SerializeField] public CharacterData selectedCharacter;
-
-    [Header("Player Timer")]
-    [SerializeField] private int enemyIndex = 0;
-    [SerializeField] private readonly float playerTimeLimit = 10f;
-    [SerializeField] private bool playerMadeChoice;
-    [SerializeField] Slider timer;
+    [SerializeField] public PlayerBattleHandler playerHandler;
+    [SerializeField] private EnemyBattleHandler enemyHandler;
+    [SerializeField] private UserData data;
 
     [Header("Components")]
     [SerializeField] GameObject[] effects;
 
     public static BattleSystem instance;
+    public CharacterData SelectedCharacter { get; private set; }
 
     private void Awake()
     {
@@ -38,7 +32,7 @@ public class BattleSystem : MonoBehaviour
         {
             Destroy(instance);
         }
-        selectedCharacter = CharacterManager.instance.selectedCharacter;
+        SelectedCharacter = CharacterManager.instance.selectedCharacter;
     }
     private void Start()
     {
@@ -47,12 +41,11 @@ public class BattleSystem : MonoBehaviour
 
     private void Initialize()
     {
+        data = SavingSystem.LoadPlayerData(UserData.saveKey);
         state = BattleState.PlayerTurn;
-        player = FindAnyObjectByType<Player>();
         StartBattleLoop();
-        EnemyUpdate();
-        SpawnEnemy();
-        
+        enemyHandler.EnemyUpdate(data);
+        enemyHandler.SpawnEnemy();
     }
 
     private async void StartBattleLoop()
@@ -62,113 +55,17 @@ public class BattleSystem : MonoBehaviour
         {
             if (state == BattleState.PlayerTurn && !PauseMenu.isPaused)
             {
-                await HandlePlayerTurn();
+                await playerHandler.HandlePlayerTurn();
             }
             else if (state == BattleState.EnemyTurn && !PauseMenu.isPaused)
             {
-                await HandleEnemyTurn();
+                await enemyHandler.HandleEnemyTurn();
             }
         }
+        EndGame();
     }
-
-    private async Task HandlePlayerTurn()
+    public void EndGame()
     {
-        player.UISystem.ManagePanel(true);
-        playerMadeChoice = false;
-
-        var playerTurnTask = WaitUntilPlayerSelectsPhrase();
-        var timerTask = StartPlayerTimer(playerTimeLimit);
-
-        var completedTask = await Task.WhenAny(playerTurnTask, timerTask);
-
-        if (completedTask == playerTurnTask)
-        {
-            playerMadeChoice = true;
-        }
-
-        player.UISystem.ManagePanel(false);
-
-        state = BattleState.EnemyTurn;
-    }
-
-    private async Task StartPlayerTimer(float timeLimit)
-    {
-        float timeRemaining = timeLimit;
-        timer.maxValue = timeLimit;
-        timer.value = timeLimit;
-        while (timeRemaining > 0 && !playerMadeChoice)
-        {
-            await Task.Delay(1000);
-            timeRemaining--;
-            timer.value = timeRemaining;
-        }
-
-        if (!playerMadeChoice)
-        {
-            player.phraseSystem.onPhraseSelected.RemoveAllListeners();
-            ChatManager.instance.SystemMessage("Looks like somebody is AFK...");
-        }
-    }
-
-    private Task WaitUntilPlayerSelectsPhrase()
-    {
-        var taskCompletionSource = new TaskCompletionSource<bool>();
-
-        void onPhraseSelected()
-        {
-            taskCompletionSource.SetResult(true);
-            player.phraseSystem.onPhraseSelected.RemoveListener(onPhraseSelected);
-        }
-
-        player.phraseSystem.onPhraseSelected.AddListener(onPhraseSelected);
-
-        return taskCompletionSource.Task;
-    }
-
-    private async Task HandleEnemyTurn()
-    {
-        await Task.Delay(2000);
-
-        state = BattleState.PlayerTurn;
-        if (enemy.healthSystem.IsDead())
-        {
-            ManageEnemies();
-        }
-        else
-        {
-            enemy.phraseSystem.ManagePhrases();
-        }
-    }
-
-    private void ManageEnemies()
-    {
-        enemies.RemoveAt(enemyIndex);
-        if (enemies.Count > 0)
-        {
-            SpawnEnemy();
-        }
-        else
-        {
-            ChatManager.instance.SystemMessage("You’ve crushed the competition! " +
-                "It's time for your dance!");
-            state = BattleState.End;
-        }
-    }
-
-    private void SpawnEnemy()
-    {
-        enemyIndex = Random.Range(0, enemies.Count);
-        GameObject newEnemy = Instantiate(enemies[enemyIndex], transform);
-        enemy = newEnemy.GetComponent<Enemy>();
-        player.phraseSystem.enemy = enemy.GetComponent<Enemy>();
-    }
-    private void EnemyUpdate()
-    {
-        ListUtils.Shuffle(enemies);
-        enemies.RemoveRange(0, enemies.Count - player.data.level);
-    }
-    private void EndGame()
-    {
-        ExperienceManager.instance.AddExperience(player.data.level * 150);
+        ExperienceManager.instance.AddExperience(data.level * 150);
     }
 }

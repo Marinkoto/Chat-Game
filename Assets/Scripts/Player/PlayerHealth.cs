@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerUIManager),typeof(PlayerPhraseManager))]
 public class PlayerHealth : MonoBehaviour, IDamagable
 {
     [Header("References")]
-    [SerializeField] PlayerPhraseManager phraseSystem;
-    [SerializeField] PlayerUIManager UISystem;
+    [HideInInspector] PlayerPhraseManager phraseSystem;
+    [HideInInspector] PlayerUIManager UISystem;
     [Header("Stats")]
     [SerializeField] public int currentHealth;
 

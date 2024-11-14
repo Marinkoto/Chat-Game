@@ -6,24 +6,24 @@ public class ExperienceManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] UserData data;
-    
     /// <summary>
     /// Observer pattern following also singleton representation
     /// </summary>
     public static ExperienceManager instance;
     public delegate void ExperienceChangeHandler(int amount);
     public event ExperienceChangeHandler OnExperienceChange;
+
     private void Awake()
     {
+        Initialize();
         if (instance != null && instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             instance = this;
         }
-        Initialize();
     }
 
     public void Initialize()

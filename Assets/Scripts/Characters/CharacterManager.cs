@@ -47,7 +47,7 @@ public class CharacterManager : MonoBehaviour
         }
         else
         {
-            Destroy(instance);
+            Destroy(gameObject);
         }
     }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[RequireComponent(typeof(PlayerPhraseManager), typeof(PlayerHealth))]
 public class PlayerUIManager : MonoBehaviour
 {
     [Header("Components")]
