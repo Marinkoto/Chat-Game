@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerPhraseManager), typeof(PlayerHealth), typeof(PlayerUIManager))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour,ITickable
 {
     [Header("References")]
     [SerializeField] public PlayerHealth healthSystem;
@@ -13,6 +13,15 @@ public class Player : MonoBehaviour
         SetupPlayer();
     }
 
+    private void OnEnable()
+    {
+        TickManager.instance.Register(this);
+    }
+    private void OnDisable()
+    {
+        TickManager.instance.Unregister(this);
+    }
+
     private void SetupPlayer()
     {
         SetupComponents();
@@ -21,15 +30,15 @@ public class Player : MonoBehaviour
         UISystem.Initialize();
     }
 
-    private void Update()
-    {
-        UISystem.HealthBarAnimation();
-    }
-
     private void SetupComponents()
     {
         healthSystem = GetComponent<PlayerHealth>();
         phraseSystem = GetComponent<PlayerPhraseManager>();
         UISystem = GetComponent<PlayerUIManager>();
+    }
+
+    public void Tick(float deltaTime)
+    {
+        UISystem.HealthBarAnimation();
     }
 }

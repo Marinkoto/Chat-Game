@@ -32,12 +32,8 @@ public class CharacterManager : MonoBehaviour
     private int currentIndex = 0;
     private void OnDisable()
     {
-        foreach (var character in characters)
-        {
-            SavingSystem.SaveCharacter(character);
-        }
+        SavingSystem.SaveAllCharacters(characters);
     }
-
 
     private void Awake()
     {
@@ -53,22 +49,25 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
+        SetupCharacterSelection();
+
+        LoadingSystem.LoadAllCharacters(characters);
+        UpdateCarousel();
+
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void SetupCharacterSelection()
+    {
         for (int i = 0; i < characterOptions.Length; i++)
         {
             int index = i;
             characterOptions[i].onClick.AddListener(() => SelectCharacter(index));
         }
-        if (characters.Count > 0)
-        {
-            SavingSystem.LoadAllCharacters(characters);
-
-            UpdateCarousel();
-        }
-        DontDestroyOnLoad(gameObject);
     }
-
-    public void UpdateStats(CharacterData currentCharacter)
+    public void ShowStats(CharacterData currentCharacter)
     {
+        LoadingSystem.LoadAllCharacters(characters);
         statsText.text = $"{currentCharacter.name}\n" +
             $"Health: {currentCharacter.maxHealth}\n";
         upgradeButton.text = $"Upgrade {currentCharacter.costToUpgrade}";
@@ -77,7 +76,7 @@ public class CharacterManager : MonoBehaviour
     private void UpdateCarousel()
     {
         CharacterData currentCharacter = characters[currentIndex];
-        UpdateStats(currentCharacter);
+        ShowStats(currentCharacter);
         if (currentCharacter.icon != null)
         {
             mainImage.sprite = currentCharacter.icon;
@@ -87,6 +86,7 @@ public class CharacterManager : MonoBehaviour
         int previousIndex = (currentIndex - 1 + characters.Count) % characters.Count;
         int nextIndex = (currentIndex + 1) % characters.Count;
 
+        //Sets the image of the previous character in the carousel
         CharacterData previousCharacter = characters[previousIndex];
         if (previousCharacter.icon != null)
         {
@@ -94,6 +94,7 @@ public class CharacterManager : MonoBehaviour
             prevImage.color = new Color(1f, 1f, 1f, 0.5f);
         }
 
+        //Sets the image of the next character in the carousel
         CharacterData nextCharacter = characters[nextIndex];
         if (nextCharacter.icon != null)
         {
@@ -123,13 +124,13 @@ public class CharacterManager : MonoBehaviour
     }
     public void UpgradeCharacter()
     {
-        if (!CurrencyManager.HasCurrency(playerManager.data, characters[currentIndex].costToUpgrade))
+        if (!CurrencyManager.HasCurrency(playerManager.Data, characters[currentIndex].costToUpgrade))
         {
             return;
         }
-        CurrencyManager.RemoveCurrency(characters[currentIndex].costToUpgrade, playerManager.data);
+        CurrencyManager.RemoveCurrency(characters[currentIndex].costToUpgrade, playerManager.Data);
         characters[currentIndex].maxHealth += 1;
-        playerManager.data.combatPower += 1;
+        playerManager.Data.combatPower += 1;
         characters[currentIndex].costToUpgrade += 50;
         SavingSystem.SaveCharacter(characters[currentIndex]);
         UpdateCarousel();

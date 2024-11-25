@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyHealth : MonoBehaviour, IDamagable
 {
@@ -13,14 +7,20 @@ public class EnemyHealth : MonoBehaviour, IDamagable
     [SerializeField] public int maxHealth;
     [SerializeField] public float scaleMultiplier;
     [Header("Components")]
-    [HideInInspector] EnemyUIManager EnemyUISystem;
+    [SerializeField] EnemyUIManager EnemyUISystem;
 
+    public bool Hittable { get; set; }
+
+    /// <summary>
+    /// Sets all the components and manages stats, systems.
+    /// </summary>
     public void Initialize()
     {
         EnemyUISystem = GetComponent<EnemyUIManager>();
         currentHealth = EnemyUISystem.enemyData.health;
         maxHealth = EnemyUISystem.enemyData.maxHealth;
         ScaleStats(CharacterManager.instance.selectedCharacter);
+        Hittable = true;
     }
 
     public void ReturnHealth(int healthToReturn)
@@ -32,6 +32,11 @@ public class EnemyHealth : MonoBehaviour, IDamagable
 
     public void TakeDamage(int damage)
     {
+        if(!Hittable)
+        {
+            return;
+        }
+
         currentHealth -= damage;
         EffectManager.instance.ChatEffect();
         EnemyUISystem.SetHUD();

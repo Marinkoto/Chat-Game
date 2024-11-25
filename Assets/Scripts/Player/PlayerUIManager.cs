@@ -10,8 +10,9 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] Image iconImage;
     [SerializeField] Image[] phraseIcons;
     [SerializeField] public Button[] phraseButtons;
-    [SerializeField] Button[] phraseInfoButtons;
+    [SerializeField] Transform[] phrasesInfo;
     [SerializeField] Slider healthBar;
+    [SerializeField] GameObject shield;
     [Header("References")]
     [SerializeField] PlayerPhraseManager phraseSystem;
     [SerializeField] PlayerHealth healthSystem;
@@ -31,6 +32,11 @@ public class PlayerUIManager : MonoBehaviour
         animator.SetBool("IsOpen", state);
     }
 
+    public void ManageShield(bool state)
+    {
+        shield.SetActive(state);
+    }
+
     private void InitializeHealthBar()
     {
         healthBar.maxValue = phraseSystem.selectedCharacter.maxHealth;
@@ -42,6 +48,8 @@ public class PlayerUIManager : MonoBehaviour
         phraseButtons[index].GetComponentInChildren<TextMeshProUGUI>().text =
             CharacterManager.instance.selectedCharacter.phrases[index].phrase;
         phraseIcons[index].sprite = CharacterManager.instance.selectedCharacter.phrases[index].icon;
+        phrasesInfo[index].GetComponentInChildren<TextMeshProUGUI>(true).text = 
+            CharacterManager.instance.selectedCharacter.phrases[index].description;
     }
 
     public void SetPlayerIcon()
@@ -57,13 +65,5 @@ public class PlayerUIManager : MonoBehaviour
         {
             SetPhraseInfo(i);
         }
-    }
-
-    public IEnumerator HitEffect()
-    {
-        EffectManager.instance.ChatEffect();
-        EffectManager.instance.chatVolume.enabled = true;
-        yield return new WaitForSeconds(0.17f);
-        EffectManager.instance.chatVolume.enabled = false;
     }
 }

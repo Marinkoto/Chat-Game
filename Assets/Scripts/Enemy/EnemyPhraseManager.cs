@@ -12,15 +12,15 @@ public class EnemyPhraseManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameText;
     [HideInInspector] public EnemyHealth healthSystem;
     [HideInInspector] public EnemyUIManager UISystem;
-    [Header("Parameters")]
-    [HideInInspector] BattleSystem battleSystem;
-    
+
+    /// <summary>
+    /// Setups all components for the script to work and sends a starting message for new enemy.
+    /// </summary>
     public void Initialize()
     {
         healthSystem = GetComponent<EnemyHealth>();
         ChatManager.instance.SystemMessage("Brace yourself! New challenger incoming!");
         UISystem = GetComponent<EnemyUIManager>();
-        battleSystem = GameObject.FindObjectOfType<BattleSystem>();
         player = FindAnyObjectByType<Player>();
     }
 
@@ -31,6 +31,7 @@ public class EnemyPhraseManager : MonoBehaviour
     }
     private void UsePhrase(Phrase phraseToUse)
     {
+        healthSystem.Hittable = true;
         switch (phraseToUse.type)
         {
             case PhraseType.DEFENCE:
@@ -40,7 +41,7 @@ public class EnemyPhraseManager : MonoBehaviour
                 player.healthSystem.TakeDamage(phraseToUse.phraseEffect);
                 break;
             case PhraseType.BUFF:
-                battleSystem.state = BattleState.EnemyTurn;
+                healthSystem.Hittable = false;
                 break;
             default:
                 break;

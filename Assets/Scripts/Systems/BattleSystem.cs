@@ -41,7 +41,7 @@ public class BattleSystem : MonoBehaviour
 
     private void Initialize()
     {
-        data = SavingSystem.LoadPlayerData(UserData.saveKey);
+        data = LoadingSystem.LoadPlayerData(UserData.saveKey);
         state = BattleState.PlayerTurn;
         StartBattleLoop();
         enemyHandler.EnemyUpdate(data);
@@ -50,9 +50,9 @@ public class BattleSystem : MonoBehaviour
 
     private async void StartBattleLoop()
     {
-        await Task.Delay(150);
         while (state != BattleState.End)
         {
+            await Task.Delay(300);
             if (state == BattleState.PlayerTurn && !PauseMenu.isPaused)
             {
                 await playerHandler.HandlePlayerTurn();

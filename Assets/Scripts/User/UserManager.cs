@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class UserManager : MonoBehaviour
 {
-    [Header("Player Data")]
-    [SerializeField] public UserData data;
+    public UserData Data { get; set; }
 
     public static UserManager instance;
     private void Awake()
     {
-        data = SavingSystem.LoadPlayerData(UserData.saveKey);
+        Data = LoadingSystem.LoadPlayerData(UserData.saveKey);   
         DontDestroyOnLoad(gameObject);
         if (instance != null && instance != this)
         {
@@ -23,7 +22,7 @@ public class UserManager : MonoBehaviour
     }
     private void OnDisable()
     {
-        SavingSystem.SavePlayerData(data);
+        SavingSystem.SavePlayerData(Data);
 
         ExperienceManager.instance.OnExperienceChange -= HandleExperienceChange;
     }
@@ -33,6 +32,6 @@ public class UserManager : MonoBehaviour
     }
     private void HandleExperienceChange(int newExperience)
     {
-        data.currentExp += newExperience;
+        Data.currentExp += newExperience;
     }
 }

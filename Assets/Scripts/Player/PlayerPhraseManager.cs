@@ -10,17 +10,17 @@ public class PlayerPhraseManager : MonoBehaviour
     [Header("References")]
     [HideInInspector] public CharacterData selectedCharacter;
     [HideInInspector] public PlayerHealth healthSystem;
-    [HideInInspector] PlayerUIManager UISystem;
-    [SerializeField] public UserData data;
+    [HideInInspector] PlayerUIManager UISystem; 
 
     [HideInInspector] public UnityEvent onPhraseSelected = new UnityEvent();
+    public UserData Data { get; set; }
 
     public void Initialize()
     {
         selectedCharacter = CharacterManager.instance.selectedCharacter;
         healthSystem = GetComponent<PlayerHealth>();
         UISystem = GetComponent<PlayerUIManager>();
-        data = SavingSystem.LoadPlayerData(UserData.saveKey);
+        Data = LoadingSystem.LoadPlayerData(UserData.saveKey);
         for (int i = 0; i < UISystem.phraseButtons.Length; i++)
         {
             int index = i;
@@ -35,22 +35,21 @@ public class PlayerPhraseManager : MonoBehaviour
     {
         Phrase newPhrase = selectedCharacter.phrases[index];
         UISystem.ManagePanel(false);
-
+        healthSystem.Hittable = true;
         switch (newPhrase.type)
         {
             case PhraseType.DEFENCE:
                 healthSystem.ReturnHealth(newPhrase.phraseEffect);
                 break;
             case PhraseType.ATTACK:
-                enemy.healthSystem.TakeDamage((int)(Mathf.RoundToInt(newPhrase.phraseEffect * data.combatPower) * 0.01f));
+                enemy.healthSystem.TakeDamage((int)(Mathf.RoundToInt(newPhrase.phraseEffect * Data.combatPower) * 0.01f));
                 break;
             case PhraseType.BUFF:
-                BattleSystem.instance.state = BattleState.PlayerTurn;
+                healthSystem.Hittable = false;
                 break;
             default:
                 break;
         }
-
         onPhraseSelected.Invoke();
         ChatManager.instance.ManageMessage("You", $"{newPhrase.phrase}");
     }

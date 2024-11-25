@@ -8,8 +8,7 @@ public class EnemyBattleHandler : MonoBehaviour
     [Header("References")]
     [SerializeField] private Enemy enemy;
     [SerializeField] private List<GameObject> enemies;
-    [Header("Parameters")]
-    [SerializeField] private int enemyIndex = 0;
+    public int EnemyIndex { get; set; } = 0;
 
     public async Task HandleEnemyTurn()
     {
@@ -27,7 +26,7 @@ public class EnemyBattleHandler : MonoBehaviour
     }
     private void ManageEnemies()
     {
-        enemies.RemoveAt(enemyIndex);
+        enemies.RemoveAt(EnemyIndex);
         if (enemies.Count > 0)
         {
             SpawnEnemy();
@@ -41,8 +40,8 @@ public class EnemyBattleHandler : MonoBehaviour
     }
     public void SpawnEnemy()
     {
-        enemyIndex = Random.Range(0, enemies.Count);
-        GameObject newEnemy = Instantiate(enemies[enemyIndex], transform);
+        EnemyIndex = Random.Range(0, enemies.Count);
+        GameObject newEnemy = Instantiate(enemies[EnemyIndex], transform);
         enemy = newEnemy.GetComponent<Enemy>();
         PlayerPhraseManager.enemy = enemy;
     }

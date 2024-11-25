@@ -15,7 +15,7 @@ public class EnemyUIManager : MonoBehaviour
     [SerializeField] EnemyHealth healthSystem;
 
     
-    private void Update()
+    public void HealthBarAnimation()
     {
         if(healthBar != null)
         {
@@ -30,7 +30,7 @@ public class EnemyUIManager : MonoBehaviour
         InitializeHealthBar();
     }
     /// <summary>
-    /// Sets everything around enemy UI
+    /// Sets name and icon for enemy
     /// </summary>
     public void SetHUD()
     {

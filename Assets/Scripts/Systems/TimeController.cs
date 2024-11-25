@@ -5,7 +5,6 @@ using UnityEngine.Rendering.Universal;
 
 public static class TimeController
 {
-    
     public static void StartTime()
     {
         Time.timeScale = 1.0f;

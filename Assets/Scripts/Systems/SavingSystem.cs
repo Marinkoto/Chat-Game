@@ -6,54 +6,25 @@ using UnityEngine.TextCore.Text;
 
 public class SavingSystem
 {
-    private static readonly string encryptionKey = "AU!JH*a91BbanU%1Pah&ya81";
+    public static readonly string ENCRYPTIONKEY = "AU!JH*a91BbanU%1Pah&ya81";
     public static void SaveCharacter(CharacterData character)
     {
         string json = JsonUtility.ToJson(character);
-        string encryptedJson = EncryptionSystem.Encrypt(json, encryptionKey);
+        string encryptedJson = EncryptionSystem.Encrypt(json, ENCRYPTIONKEY);
         File.WriteAllText(Application.persistentDataPath + "/" + character.name + ".json", encryptedJson);
         
-    }
-    public static CharacterData LoadCharacter(string characterName)
-    {
-        string path = Application.persistentDataPath + "/" + characterName + ".json";
-        if (File.Exists(path))
-        {
-            string encryptedJson = File.ReadAllText(path);
-            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, encryptionKey);
-            CharacterData character = JsonUtility.FromJson<CharacterData>(decryptedJson);
-            character.icon = Resources.Load<Sprite>(character.iconPath);
-            return character;
-        }
-        return null;
-    }
-    public static void LoadAllCharacters(List<CharacterData> characters)
-    {
-        for (int i = 0; i < characters.Count; i++)
-        {
-            CharacterData loadedCharacter = LoadCharacter(characters[i].name);
-            if (loadedCharacter != null)
-            {
-                characters[i] = loadedCharacter;
-            }
-        }
     }
     public static void SavePlayerData(UserData playerData)
     {
         string json = JsonUtility.ToJson(playerData);
-        string encryptedJson = EncryptionSystem.Encrypt(json, encryptionKey);
+        string encryptedJson = EncryptionSystem.Encrypt(json, ENCRYPTIONKEY);
         File.WriteAllText(Application.persistentDataPath + "/" + UserData.saveKey + ".json", encryptedJson);;
     }
-    public static UserData LoadPlayerData(string key)
+    public static void SaveAllCharacters(List<CharacterData> characters)
     {
-        string path = Application.persistentDataPath + "/" + key + ".json";
-        if (File.Exists(path))
+        foreach (CharacterData character in characters)
         {
-            string encryptedJson = File.ReadAllText(path);
-            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, encryptionKey);
-            UserData playerData = JsonUtility.FromJson<UserData>(decryptedJson);
-            return playerData;
+            SaveCharacter(character);
         }
-        return new UserData();
     }
 }

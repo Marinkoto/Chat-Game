@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class ListUtils
 {
-    private static System.Random rng = new();
+    private static readonly System.Random rng = new();
     public static void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
@@ -15,5 +15,10 @@ public static class ListUtils
             int k = rng.Next(n + 1);
             (list[n], list[k]) = (list[k], list[n]);
         }
+    }
+    public static T GetRandomItem<T>(this IList<T> list)
+    {
+        int randomIndex = UnityEngine.Random.Range(0, list.Count);
+        return list[randomIndex];
     }
 }

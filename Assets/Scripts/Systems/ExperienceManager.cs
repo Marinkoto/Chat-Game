@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class ExperienceManager : MonoBehaviour
 {
+    //Observer pattern following also singleton representation
     [Header("References")]
-    [SerializeField] UserData data;
-    /// <summary>
-    /// Observer pattern following also singleton representation
-    /// </summary>
+    [SerializeField] private UserData data;
     public static ExperienceManager instance;
     public delegate void ExperienceChangeHandler(int amount);
     public event ExperienceChangeHandler OnExperienceChange;
@@ -28,7 +26,7 @@ public class ExperienceManager : MonoBehaviour
 
     public void Initialize()
     {
-        data = SavingSystem.LoadPlayerData(UserData.saveKey);
+        data = LoadingSystem.LoadPlayerData(UserData.saveKey);
         DontDestroyOnLoad(gameObject);
     }
 

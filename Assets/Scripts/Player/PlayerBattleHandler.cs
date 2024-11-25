@@ -11,25 +11,24 @@ public class PlayerBattleHandler : MonoBehaviour
     [Header("Components")]
     [SerializeField] Slider timer;
 
-    private readonly float playerTimeLimit = 10;
-    private bool playerMadeChoice;
+    private readonly float PLAYERTIMELIMIT = 10;
+    public bool PlayerMadeChoice { get; set; }
+
     public async Task HandlePlayerTurn()
     {
         player.UISystem.ManagePanel(true);
-        playerMadeChoice = false;
+        PlayerMadeChoice = false;
 
         var playerTurnTask = WaitUntilPlayerSelectsPhrase();
-        var timerTask = StartPlayerTimer(playerTimeLimit);
-
+        var timerTask = StartPlayerTimer(PLAYERTIMELIMIT);
         var completedTask = await Task.WhenAny(playerTurnTask, timerTask);
 
         if (completedTask == playerTurnTask)
         {
-            playerMadeChoice = true;
+            PlayerMadeChoice = true;
         }
 
         player.UISystem.ManagePanel(false);
-
         BattleSystem.instance.state = BattleState.EnemyTurn;
     }
     private async Task StartPlayerTimer(float timeLimit)
@@ -37,14 +36,14 @@ public class PlayerBattleHandler : MonoBehaviour
         float timeRemaining = timeLimit;
         timer.maxValue = timeLimit;
         timer.value = timeLimit;
-        while (timeRemaining > 0 && !playerMadeChoice)
+        while (timeRemaining > 0 && !PlayerMadeChoice)
         {
             await Task.Delay(1000);
             timeRemaining--;
             timer.value = timeRemaining;
         }
 
-        if (!playerMadeChoice)
+        if (!PlayerMadeChoice)
         {
             player.phraseSystem.onPhraseSelected.RemoveAllListeners();
             ChatManager.instance.SystemMessage("Looks like somebody is AFK...");

@@ -11,4 +11,5 @@ public class Phrase : ScriptableObject
     [SerializeField] public PhraseType type;
     [SerializeField] public int phraseEffect;
     [SerializeField] public Sprite icon;
+    [SerializeField, TextArea] public string description;
 }
