@@ -21,7 +21,7 @@ public class EnemyPhraseManager : MonoBehaviour
         healthSystem = GetComponent<EnemyHealth>();
         ChatManager.instance.SystemMessage("Brace yourself! New challenger incoming!");
         UISystem = GetComponent<EnemyUIManager>();
-        player = FindAnyObjectByType<Player>();
+        player = FindAnyObjectByType<Player>();    
     }
 
     public void ManagePhrases()

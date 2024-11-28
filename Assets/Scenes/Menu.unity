@@ -535,14 +535,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2794bc6b49491445bebcfc805b6039f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data:
-    level: 1
-    maxLevel: 40
-    currentExp: 0
-    expToLevelUp: 0
-    costToLevelUp: 0
-    currency: 5000
-    combatPower: 100
 --- !u!4 &131438217
 Transform:
   m_ObjectHideFlags: 0
@@ -1302,11 +1294,6 @@ MonoBehaviour:
     icon: {fileID: 0}
   upgradeButton: {fileID: 1952452863}
   playerManager: {fileID: 131438216}
-  characterOptions:
-  - {fileID: 907661580}
-  - {fileID: 217033032}
-  - {fileID: 1180733604}
-  - {fileID: 1388767863}
   nextImage: {fileID: 1888985270}
   prevImage: {fileID: 416761608}
   mainImage: {fileID: 757783400}
@@ -2866,7 +2853,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1365891936
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4810,3 +4797,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exitButton: {fileID: 834309256}
+  characterOptions:
+  - {fileID: 907661580}
+  - {fileID: 217033032}
+  - {fileID: 1180733604}
+  - {fileID: 1388767863}

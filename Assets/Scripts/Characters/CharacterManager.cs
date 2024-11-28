@@ -19,9 +19,6 @@ public class CharacterManager : MonoBehaviour
     [Header("Player Data")]
     [SerializeField] UserManager playerManager;
 
-    [Header("Character Selection")]
-    [SerializeField] Button[] characterOptions;
-
     [Header("Carousel")]
     [SerializeField] Image nextImage;
     [SerializeField] Image prevImage;
@@ -49,15 +46,13 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        SetupCharacterSelection();
-
         LoadingSystem.LoadAllCharacters(characters);
         UpdateCarousel();
 
         DontDestroyOnLoad(gameObject);
     }
 
-    private void SetupCharacterSelection()
+    public void SetupCharacterSelection(Button[] characterOptions)
     {
         for (int i = 0; i < characterOptions.Length; i++)
         {
