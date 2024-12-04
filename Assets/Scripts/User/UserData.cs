@@ -15,5 +15,6 @@ public class UserData
     [SerializeField] public int currency = 5000;
     [Header("Game Data")]
     [SerializeField] public int combatPower = 250;
-    [SerializeField] public static string saveKey = "PlayerSettings";
+    [SerializeField] public int wins = 0;
+    [SerializeField] public static readonly string SAVEKEY = "PlayerSettings";
 }

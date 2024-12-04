@@ -12,7 +12,7 @@ public class PlayerPhraseManager : MonoBehaviour
     [HideInInspector] public PlayerHealth healthSystem;
     [HideInInspector] PlayerUIManager UISystem; 
 
-    [HideInInspector] public UnityEvent onPhraseSelected = new UnityEvent();
+    [HideInInspector] public UnityEvent onPhraseSelected = new();
     public UserData Data { get; set; }
 
     public void Initialize()
@@ -20,7 +20,7 @@ public class PlayerPhraseManager : MonoBehaviour
         selectedCharacter = CharacterManager.instance.selectedCharacter;
         healthSystem = GetComponent<PlayerHealth>();
         UISystem = GetComponent<PlayerUIManager>();
-        Data = LoadingSystem.LoadPlayerData(UserData.saveKey);
+        Data = LoadingSystem.LoadUserData(UserData.SAVEKEY);
         for (int i = 0; i < UISystem.phraseButtons.Length; i++)
         {
             int index = i;
@@ -46,6 +46,7 @@ public class PlayerPhraseManager : MonoBehaviour
                 break;
             case PhraseType.BUFF:
                 healthSystem.Hittable = false;
+                healthSystem.ReturnHealth(10);
                 break;
             default:
                 break;

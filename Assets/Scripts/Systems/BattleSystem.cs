@@ -41,7 +41,7 @@ public class BattleSystem : MonoBehaviour
 
     private void Initialize()
     {
-        data = LoadingSystem.LoadPlayerData(UserData.saveKey);
+        data = LoadingSystem.LoadUserData(UserData.SAVEKEY);
         state = BattleState.PlayerTurn;
         StartBattleLoop();
         enemyHandler.EnemyUpdate(data);

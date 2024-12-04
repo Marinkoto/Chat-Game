@@ -12,10 +12,20 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] public Button[] phraseButtons;
     [SerializeField] Transform[] phrasesInfo;
     [SerializeField] Slider healthBar;
-    [SerializeField] GameObject shield;
+    [SerializeField] Animator shield;
     [Header("References")]
     [SerializeField] PlayerPhraseManager phraseSystem;
     [SerializeField] PlayerHealth healthSystem;
+
+    private void OnEnable()
+    {
+        PlayerHealth.OnHit += OnPlayerHitHandler; 
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnHit -= OnPlayerHitHandler; 
+    }
 
     public void Initialize()
     {
@@ -31,10 +41,15 @@ public class PlayerUIManager : MonoBehaviour
     {
         animator.SetBool("IsOpen", state);
     }
-
+    private void OnPlayerHitHandler()
+    {
+        ManageShield(healthSystem.Hittable);
+    }
     public void ManageShield(bool state)
     {
-        shield.SetActive(state);
+        if (shield == null)
+            return;
+        shield.SetBool("Active", !state);
     }
 
     private void InitializeHealthBar()

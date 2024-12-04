@@ -9,7 +9,7 @@ public class UserManager : MonoBehaviour
     public static UserManager instance;
     private void Awake()
     {
-        Data = LoadingSystem.LoadPlayerData(UserData.saveKey);   
+        Data = LoadingSystem.LoadUserData(UserData.SAVEKEY);   
         DontDestroyOnLoad(gameObject);
         if (instance != null && instance != this)
         {

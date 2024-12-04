@@ -47,6 +47,7 @@ public class EnemyPhraseManager : MonoBehaviour
                 break;
         }
         ChatManager.instance.ManageMessage("Enemy", $"{phraseToUse.phrase}");
+        UISystem.ManageShield(healthSystem.Hittable);
     }
     private void GetNewPhrases()
     {

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(PlayerUIManager), typeof(PlayerPhraseManager))]
 public class PlayerHealth : MonoBehaviour, IDamagable
@@ -8,6 +10,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     [HideInInspector] PlayerPhraseManager phraseSystem;
     [Header("Stats")]
     [SerializeField] public int currentHealth;
+
+    public static event Action OnHit;
 
     public bool Hittable { get; set; }
 
@@ -20,12 +24,15 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
     public void TakeDamage(int damage)
     {
+        OnHit?.Invoke();
         if (!Hittable)
         {
+            Hittable = true;
+            OnHit?.Invoke();
             return;
         }
-
         currentHealth -= damage;
+
         StartCoroutine(EffectManager.instance.PlayerHitEffect());
         if (currentHealth <= 0)
             Die();

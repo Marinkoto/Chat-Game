@@ -26,7 +26,7 @@ public class ExperienceManager : MonoBehaviour
 
     public void Initialize()
     {
-        data = LoadingSystem.LoadPlayerData(UserData.saveKey);
+        data = LoadingSystem.LoadUserData(UserData.SAVEKEY);
         DontDestroyOnLoad(gameObject);
     }
 

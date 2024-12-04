@@ -12,13 +12,19 @@ public class SavingSystem
         string json = JsonUtility.ToJson(character);
         string encryptedJson = EncryptionSystem.Encrypt(json, ENCRYPTIONKEY);
         File.WriteAllText(Application.persistentDataPath + "/" + character.name + ".json", encryptedJson);
-        
+        SaveEquipment(character.weapon);
     }
     public static void SavePlayerData(UserData playerData)
     {
         string json = JsonUtility.ToJson(playerData);
         string encryptedJson = EncryptionSystem.Encrypt(json, ENCRYPTIONKEY);
-        File.WriteAllText(Application.persistentDataPath + "/" + UserData.saveKey + ".json", encryptedJson);;
+        File.WriteAllText(Application.persistentDataPath + "/" + UserData.SAVEKEY + ".json", encryptedJson);;
+    }
+    public static void SaveEquipment(Equipment equipment)
+    {
+        string json = JsonUtility.ToJson(equipment);
+        string encryptedJson = EncryptionSystem.Encrypt(json, ENCRYPTIONKEY);
+        File.WriteAllText(Application.persistentDataPath + "/" + equipment.name + ".json", encryptedJson);
     }
     public static void SaveAllCharacters(List<CharacterData> characters)
     {

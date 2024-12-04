@@ -15,4 +15,6 @@ public class CharacterData
     [Header("Visuals")]
     [SerializeField] public string iconPath;
     [HideInInspector] public Sprite icon;
+    [Header("Equipment")]
+    [SerializeField] public Equipment weapon;
 }

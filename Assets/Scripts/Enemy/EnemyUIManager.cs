@@ -13,8 +13,17 @@ public class EnemyUIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI healthText;
     [SerializeField] public EnemyData enemyData;
     [SerializeField] EnemyHealth healthSystem;
+    [SerializeField] Animator shield;
 
-    
+    private void OnEnable()
+    {
+        EnemyHealth.OnHit += OnEnemyHitHandler;
+    }
+
+    private void OnDisable()
+    {
+        EnemyHealth.OnHit -= OnEnemyHitHandler;
+    }
     public void HealthBarAnimation()
     {
         if(healthBar != null)
@@ -42,5 +51,15 @@ public class EnemyUIManager : MonoBehaviour
     {
         healthBar.maxValue = healthSystem.maxHealth;
         healthBar.value = healthSystem.currentHealth;
+    }
+    public void ManageShield(bool state)
+    {
+        if (shield == null)
+            return;
+        shield.SetBool("Active",!state);
+    }
+    private void OnEnemyHitHandler()
+    {
+        ManageShield(healthSystem.Hittable);
     }
 }

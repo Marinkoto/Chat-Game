@@ -16,11 +16,13 @@ public static class LoadingSystem
             CharacterData character = JsonUtility.FromJson<CharacterData>(decryptedJson);
             character.icon = Resources.Load<Sprite>(character.iconPath);
             character.phrases = Resources.LoadAll<Phrase>($"Phrases/{characterName}").ToList();
+            character.weapon = LoadEquipment(character.weapon);
             return character;
         }
+        MenuManager.instance.UpdateGamePanel();
         return null;
     }
-    public static UserData LoadPlayerData(string key)
+    public static UserData LoadUserData(string key)
     {
         string path = Application.persistentDataPath + "/" + key + ".json";
         if (File.Exists(path))
@@ -33,6 +35,19 @@ public static class LoadingSystem
         return new UserData();
     }
 
+    public static Equipment LoadEquipment(Equipment equipment)
+    {
+        string path = Application.persistentDataPath + "/" + equipment.name + ".json";
+        if (File.Exists(path))
+        {
+            string encryptedJson = File.ReadAllText(path);
+            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson,SavingSystem.ENCRYPTIONKEY);
+            Equipment loadedEquipment = JsonUtility.FromJson<Equipment>(decryptedJson);
+            loadedEquipment.icon = Resources.Load<Sprite>(loadedEquipment.iconPath);
+            return loadedEquipment;
+        }
+        return new Equipment();
+    }
     public static void LoadAllCharacters(List<CharacterData> characters)
     {
         for (int i = 0; i < characters.Count; i++)

@@ -23,6 +23,7 @@ public class EnemyBattleHandler : MonoBehaviour
         {
             enemy.phraseSystem.ManagePhrases();
         }
+        enemy.UISystem.ManageShield(enemy.healthSystem.Hittable);
     }
     private void ManageEnemies()
     {

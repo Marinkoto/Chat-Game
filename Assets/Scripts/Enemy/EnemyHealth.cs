@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour, IDamagable
@@ -9,6 +10,7 @@ public class EnemyHealth : MonoBehaviour, IDamagable
     [Header("Components")]
     [SerializeField] EnemyUIManager EnemyUISystem;
 
+    public static event Action OnHit;
     public bool Hittable { get; set; }
 
     /// <summary>
@@ -32,8 +34,11 @@ public class EnemyHealth : MonoBehaviour, IDamagable
 
     public void TakeDamage(int damage)
     {
+        OnHit?.Invoke();
         if(!Hittable)
         {
+            Hittable = true;
+            OnHit?.Invoke();
             return;
         }
 

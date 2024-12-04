@@ -16,9 +16,6 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] public CharacterData selectedCharacter;
     [SerializeField] TextMeshProUGUI upgradeButton;
 
-    [Header("Player Data")]
-    [SerializeField] UserManager playerManager;
-
     [Header("Carousel")]
     [SerializeField] Image nextImage;
     [SerializeField] Image prevImage;
@@ -30,6 +27,10 @@ public class CharacterManager : MonoBehaviour
     private void OnDisable()
     {
         SavingSystem.SaveAllCharacters(characters);
+    }
+    private void OnEnable()
+    {
+        LoadingSystem.LoadAllCharacters(characters);
     }
 
     private void Awake()
@@ -46,7 +47,6 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        LoadingSystem.LoadAllCharacters(characters);
         UpdateCarousel();
 
         DontDestroyOnLoad(gameObject);
@@ -60,18 +60,24 @@ public class CharacterManager : MonoBehaviour
             characterOptions[i].onClick.AddListener(() => SelectCharacter(index));
         }
     }
-    public void ShowStats(CharacterData currentCharacter)
+    private void ShowStats(CharacterData currentCharacter)
     {
-        LoadingSystem.LoadAllCharacters(characters);
         statsText.text = $"{currentCharacter.name}\n" +
             $"Health: {currentCharacter.maxHealth}\n";
         upgradeButton.text = $"Upgrade {currentCharacter.costToUpgrade}";
+    }
+
+    private void ManageEquipment(CharacterData currentCharacter)
+    {
+        EquipmentManager.instance.SetButtonUpgrade(currentCharacter.weapon);
+        EquipmentManager.instance.UpdateUI(currentCharacter.weapon);
     }
 
     private void UpdateCarousel()
     {
         CharacterData currentCharacter = characters[currentIndex];
         ShowStats(currentCharacter);
+        ManageEquipment(currentCharacter);
         if (currentCharacter.icon != null)
         {
             mainImage.sprite = currentCharacter.icon;
@@ -100,6 +106,11 @@ public class CharacterManager : MonoBehaviour
         mainImage.color = Color.white;
     }
 
+    private CharacterData GetCharacterByIndex(int index)
+    {
+        return characters[index];
+    }
+
     public void NextCharacter()
     {
         currentIndex = (currentIndex + 1) % characters.Count;
@@ -119,15 +130,14 @@ public class CharacterManager : MonoBehaviour
     }
     public void UpgradeCharacter()
     {
-        if (!CurrencyManager.HasCurrency(playerManager.Data, characters[currentIndex].costToUpgrade))
+        if (CurrencyManager.HasCurrency(UserManager.instance.Data, characters[currentIndex].costToUpgrade))
         {
-            return;
+            CurrencyManager.RemoveCurrency(characters[currentIndex].costToUpgrade, UserManager.instance.Data);
+            characters[currentIndex].maxHealth += 1;
+            UserManager.instance.Data.combatPower += 1;
+            characters[currentIndex].costToUpgrade += 50;
+            SavingSystem.SaveCharacter(characters[currentIndex]);
+            UpdateCarousel();
         }
-        CurrencyManager.RemoveCurrency(characters[currentIndex].costToUpgrade, playerManager.Data);
-        characters[currentIndex].maxHealth += 1;
-        playerManager.Data.combatPower += 1;
-        characters[currentIndex].costToUpgrade += 50;
-        SavingSystem.SaveCharacter(characters[currentIndex]);
-        UpdateCarousel();
     }
 }
