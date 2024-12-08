@@ -32,7 +32,7 @@ public class BattleSystem : MonoBehaviour
         {
             Destroy(instance);
         }
-        SelectedCharacter = CharacterManager.instance.selectedCharacter;
+        SelectedCharacter = CharacterDataManager.instance.selectedCharacter;
     }
     private void Start()
     {

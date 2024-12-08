@@ -14,11 +14,11 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     public static event Action OnHit;
 
     public bool Hittable { get; set; }
-
+    
     public void Initialize()
     {
         phraseSystem = GetComponent<PlayerPhraseManager>();
-        currentHealth = CharacterManager.instance.selectedCharacter.maxHealth;
+        currentHealth = CharacterDataManager.instance.selectedCharacter.maxHealth;
         Hittable = true;
     }
 
@@ -31,9 +31,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
             OnHit?.Invoke();
             return;
         }
-        currentHealth -= damage;
-
         StartCoroutine(EffectManager.instance.PlayerHitEffect());
+        currentHealth -= damage;
         if (currentHealth <= 0)
             Die();
     }

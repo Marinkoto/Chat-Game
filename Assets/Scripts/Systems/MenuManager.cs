@@ -33,7 +33,7 @@ public class MenuManager : MonoBehaviour
     {
         Data = UserManager.instance.Data;
         SetupExitButtons();
-        CharacterManager.instance.SetupCharacterSelection(characterOptions);
+        CharacterUIManager.SetupCharacterSelection(characterOptions);
     }
     public void UpdateUserStats()
     {

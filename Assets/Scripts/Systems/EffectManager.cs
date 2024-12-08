@@ -21,9 +21,10 @@ public class EffectManager : MonoBehaviour
         }
         else
         {
-            Destroy(instance);
+            Destroy(gameObject);
         }
     }
+
     public void ChatEffect()
     {
         Vector3 randPos = new(Random.Range(-5, 5), Random.Range(-3, 5));

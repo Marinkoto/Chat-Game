@@ -21,7 +21,7 @@ public class EnemyHealth : MonoBehaviour, IDamagable
         EnemyUISystem = GetComponent<EnemyUIManager>();
         currentHealth = EnemyUISystem.enemyData.health;
         maxHealth = EnemyUISystem.enemyData.maxHealth;
-        ScaleStats(CharacterManager.instance.selectedCharacter);
+        ScaleStats(CharacterDataManager.instance.selectedCharacter);
         Hittable = true;
     }
 

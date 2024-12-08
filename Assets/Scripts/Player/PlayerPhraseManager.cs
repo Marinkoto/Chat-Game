@@ -17,7 +17,7 @@ public class PlayerPhraseManager : MonoBehaviour
 
     public void Initialize()
     {
-        selectedCharacter = CharacterManager.instance.selectedCharacter;
+        selectedCharacter = CharacterDataManager.instance.selectedCharacter;
         healthSystem = GetComponent<PlayerHealth>();
         UISystem = GetComponent<PlayerUIManager>();
         Data = LoadingSystem.LoadUserData(UserData.SAVEKEY);
