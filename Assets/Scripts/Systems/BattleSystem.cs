@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
@@ -14,13 +16,14 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] public BattleState state;
     [SerializeField] public PlayerBattleHandler playerHandler;
     [SerializeField] private EnemyBattleHandler enemyHandler;
-    [SerializeField] private UserData data;
-
-    [Header("Components")]
-    [SerializeField] GameObject[] effects;
 
     public static BattleSystem instance;
+    public static UnityEvent OnGameEnd = new UnityEvent();
     public CharacterData SelectedCharacter { get; private set; }
+    private void OnDisable()
+    {
+        OnGameEnd.RemoveAllListeners();
+    }
 
     private void Awake()
     {
@@ -41,10 +44,9 @@ public class BattleSystem : MonoBehaviour
 
     private void Initialize()
     {
-        data = LoadingSystem.LoadUserData(UserData.SAVEKEY);
         state = BattleState.PlayerTurn;
         StartBattleLoop();
-        enemyHandler.EnemyUpdate(data);
+        enemyHandler.EnemyUpdate(UserManager.instance.data);
         enemyHandler.SpawnEnemy();
     }
 
@@ -66,6 +68,9 @@ public class BattleSystem : MonoBehaviour
     }
     public void EndGame()
     {
-        ExperienceManager.instance.AddExperience(data.level * 150);
+        ExperienceManager.instance.AddExperience(UserManager.instance.data.level * 150);
+        CurrencyManager.AddCurrency(UserManager.instance.data.level * 250, UserManager.instance.data);
+        OnGameEnd?.Invoke();
     }
 }
+    

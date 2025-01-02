@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemyHealth : MonoBehaviour, IDamagable
 {
@@ -10,12 +11,20 @@ public class EnemyHealth : MonoBehaviour, IDamagable
     [Header("Components")]
     [SerializeField] EnemyUIManager EnemyUISystem;
 
-    public static event Action OnHit;
+    public static UnityEvent OnHealthChange = new UnityEvent();
+    public static UnityEvent OnHit = new UnityEvent();
+    public static UnityEvent OnDeath = new UnityEvent();
     public bool Hittable { get; set; }
 
     /// <summary>
     /// Sets all the components and manages stats, systems.
     /// </summary>
+    private void OnDisable()
+    {
+        OnHit.RemoveAllListeners();
+        OnHealthChange.RemoveAllListeners();
+        OnDeath.RemoveAllListeners();
+    }
     public void Initialize()
     {
         EnemyUISystem = GetComponent<EnemyUIManager>();
@@ -30,12 +39,13 @@ public class EnemyHealth : MonoBehaviour, IDamagable
         currentHealth = Mathf.Min(currentHealth + healthToReturn, maxHealth);
         EnemyUISystem.SetHUD();
         EffectManager.instance.ChatEffect();
+        OnHealthChange?.Invoke();
     }
 
     public void TakeDamage(int damage)
     {
         OnHit?.Invoke();
-        if(!Hittable)
+        if (!Hittable)
         {
             Hittable = true;
             OnHit?.Invoke();
@@ -50,6 +60,7 @@ public class EnemyHealth : MonoBehaviour, IDamagable
     }
     public void Die()
     {
+        OnDeath?.Invoke();
         Destroy(gameObject);
     }
     public bool IsDead()
@@ -62,7 +73,7 @@ public class EnemyHealth : MonoBehaviour, IDamagable
     /// <param name="character"></param>
     public void ScaleStats(CharacterData character)
     {
-        currentHealth = Mathf.RoundToInt(character.maxHealth * scaleMultiplier + maxHealth  );
+        currentHealth = Mathf.RoundToInt(character.maxHealth * scaleMultiplier + maxHealth);
         maxHealth = currentHealth;
     }
 }

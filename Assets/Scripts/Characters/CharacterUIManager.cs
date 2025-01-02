@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
@@ -10,7 +12,9 @@ public class CharacterUIManager : MonoBehaviour
     [Header("Main Character Display")]
     [SerializeField] Image iconImage;
     [SerializeField] TextMeshProUGUI statsText;
-    [SerializeField] TextMeshProUGUI upgradeButton;
+    [SerializeField] Button upgradeButton;
+    [SerializeField] TextMeshProUGUI upgradeButtonText;
+    [SerializeField] TextMeshProUGUI nameText;
 
     [Header("Carousel")]
     [SerializeField] Image nextImage;
@@ -21,13 +25,14 @@ public class CharacterUIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        CharacterDataManager.OnCharacterUpgrade += UpdateCarousel;
+        upgradeButton.onClick.AddListener(
+            () => CharacterDataManager.instance.UpgradeCharacter(UserManager.instance.data));
+        CharacterDataManager.OnCharacterUpgrade.AddListener(UpdateCarousel);
     }
-    private void OnDisable()
+    void Start()
     {
-        CharacterDataManager.OnCharacterUpgrade -= UpdateCarousel;
+        UpdateCarousel();
     }
-
     public static void SetupCharacterSelection(Button[] characterOptions)
     {
         for (int i = 0; i < characterOptions.Length; i++)
@@ -43,71 +48,72 @@ public class CharacterUIManager : MonoBehaviour
         SceneSystem.LoadScene(1);
     }
 
-    void Start()
-    {
-        UpdateCarousel();
-    }
-
     public void UpdateCarousel()
     {
         CharacterData currentCharacter = GetCharacterByIndex(CurrentCharacterIndex);
-        ShowStats(currentCharacter);
+        UpdateStats(currentCharacter);
         ManageEquipment(currentCharacter);
-        if (currentCharacter.icon != null)
-        {
-            mainImage.sprite = currentCharacter.icon;
-            iconImage.sprite = currentCharacter.icon;
-        }
+        SetIcon(mainImage, currentCharacter.icon, 0.5f);
+        SetIcon(iconImage, currentCharacter.icon,1);
 
-        int previousIndex = (CurrentCharacterIndex - 1 + CharacterDataManager.instance.characters.Count) % CharacterDataManager.instance.characters.Count;
-        int nextIndex = (CurrentCharacterIndex + 1) % CharacterDataManager.instance.characters.Count;
+        CharacterData previousCharacter = GetCharacterByIndex(GetPreviousCharacter());
+        SetIcon(prevImage, previousCharacter.icon,0.5f);
 
-        CharacterData previousCharacter = GetCharacterByIndex(previousIndex);
-        if (previousCharacter.icon != null)
-        {
-            prevImage.sprite = previousCharacter.icon;
-            prevImage.color = new Color(1f, 1f, 1f, 0.5f);
-        }
-
-        CharacterData nextCharacter = GetCharacterByIndex(nextIndex);
-        if (nextCharacter.icon != null)
-        {
-            nextImage.sprite = nextCharacter.icon;
-            nextImage.color = new Color(1f, 1f, 1f, 0.5f);
-        }
-
+        CharacterData nextCharacter = GetCharacterByIndex(GetNextCharacter());
+        SetIcon(nextImage, nextCharacter.icon,0.5f);
         mainImage.color = Color.white;
     }
-
-    private void ShowStats(CharacterData currentCharacter)
+    private void SetIcon(Image image, Sprite sprite,float alpha)
     {
-        statsText.text = $"{currentCharacter.name}\n" +
-            $"Health: {currentCharacter.maxHealth}\n";
-        upgradeButton.text = $"Upgrade {currentCharacter.costToUpgrade}";
+        if (sprite != null)
+        {
+            image.sprite = sprite;
+            image.color = new Color(1f, 1f, 1f, alpha);
+        }
+    }
+    private void ManageEquipment(CharacterData character)
+    {
+        EquipmentUIManager.instance.UpdateUI(character.weapon);
+        EquipmentUIManager.instance.SetButtonUpgrade(character.weapon);
+    }
+    private void UpdateStats(CharacterData currentCharacter)
+    {
+        nameText.text = currentCharacter.name;
+        statsText.text = $"Health: {currentCharacter.maxHealth}\n" +
+            $"Level : {currentCharacter.level}/{currentCharacter.maxLevel}";
+        if (currentCharacter.IsMaxLevel() == false)
+        {
+            upgradeButtonText.text = $"Upgrade {currentCharacter.costToUpgrade}";
+            upgradeButton.interactable = true;
+        }
+        else
+        {
+            upgradeButtonText.text = $"Maxxed";
+            upgradeButton.interactable = false;
+        }
     }
 
     private CharacterData GetCharacterByIndex(int index)
     {
-        return CharacterDataManager.instance.characters[index];
+        return ListUtils.GetItemByIndex(CharacterDataManager.instance.characters, index);
     }
-
-    private void ManageEquipment(CharacterData currentCharacter)
-    {
-        EquipmentManager.instance.SetButtonUpgrade(currentCharacter.weapon);
-        EquipmentManager.instance.UpdateUI(currentCharacter.weapon);
-    }
-    /// <summary>
-    /// Both methods are used for arrow buttons on the menu to change characters
-    /// </summary>
     public void NextCharacter()
     {
-        CurrentCharacterIndex = (CurrentCharacterIndex + 1) % CharacterDataManager.instance.characters.Count;
+        CurrentCharacterIndex = GetNextCharacter();
         UpdateCarousel();
     }
 
     public void PreviousCharacter()
     {
-        CurrentCharacterIndex = (CurrentCharacterIndex  - 1 + CharacterDataManager.instance.characters.Count) % CharacterDataManager.instance.characters.Count;
+        CurrentCharacterIndex = GetPreviousCharacter();
         UpdateCarousel();
+    }
+    public int GetPreviousCharacter()
+    {
+        return (CurrentCharacterIndex - 1 + CharacterDataManager.instance.GetCharacterCount()) % CharacterDataManager.instance.GetCharacterCount();
+    }
+    public int GetNextCharacter()
+    {
+        return (CurrentCharacterIndex + 1) % CharacterDataManager.instance.GetCharacterCount();
     }
 }

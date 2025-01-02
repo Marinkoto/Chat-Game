@@ -12,15 +12,13 @@ public class PlayerPhraseManager : MonoBehaviour
     [HideInInspector] public PlayerHealth healthSystem;
     [HideInInspector] PlayerUIManager UISystem; 
 
-    [HideInInspector] public UnityEvent onPhraseSelected = new();
-    public UserData Data { get; set; }
+    [HideInInspector] public static UnityEvent OnPhraseSelected = new();
 
     public void Initialize()
     {
         selectedCharacter = CharacterDataManager.instance.selectedCharacter;
         healthSystem = GetComponent<PlayerHealth>();
         UISystem = GetComponent<PlayerUIManager>();
-        Data = LoadingSystem.LoadUserData(UserData.SAVEKEY);
         for (int i = 0; i < UISystem.phraseButtons.Length; i++)
         {
             int index = i;
@@ -42,16 +40,16 @@ public class PlayerPhraseManager : MonoBehaviour
                 healthSystem.ReturnHealth(newPhrase.phraseEffect);
                 break;
             case PhraseType.ATTACK:
-                enemy.healthSystem.TakeDamage((int)(Mathf.RoundToInt(newPhrase.phraseEffect * Data.combatPower) * 0.01f));
+                enemy.healthSystem.TakeDamage((int)(Mathf.RoundToInt(newPhrase.phraseEffect * UserManager.instance.data.combatPower) * 0.01f));
                 break;
             case PhraseType.BUFF:
                 healthSystem.Hittable = false;
-                healthSystem.ReturnHealth(10);
+                healthSystem.ReturnHealth(5);
                 break;
             default:
                 break;
         }
-        onPhraseSelected.Invoke();
+        OnPhraseSelected?.Invoke();
         ChatManager.instance.ManageMessage("You", $"{newPhrase.phrase}");
     }
 }

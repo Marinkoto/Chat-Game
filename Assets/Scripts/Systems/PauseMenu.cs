@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,8 +8,6 @@ public class PauseMenu : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] GameObject pauseMenu;
-    public static event Action OnPause;
-    public static event Action OnUnpause;
     public static bool isPaused;
 
     void Start()
@@ -24,12 +23,10 @@ public class PauseMenu : MonoBehaviour
             if (isPaused)
             {
                 ResumeGame();
-                OnUnpause?.Invoke();
             }
             else
             {
                 PauseGame();
-                OnPause?.Invoke();
             }
         }
     }
@@ -52,5 +49,12 @@ public class PauseMenu : MonoBehaviour
     public void LoadMenu()
     {
         SceneSystem.LoadScene(SceneSystem.GetCurrentScene() - 1);
+    }
+    public static async Task WaitWhilePaused()
+    {
+        while (isPaused)
+        {
+            await Task.Yield(); 
+        }
     }
 }

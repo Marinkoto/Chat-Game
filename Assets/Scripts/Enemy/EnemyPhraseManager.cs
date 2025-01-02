@@ -11,7 +11,6 @@ public class EnemyPhraseManager : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] TextMeshProUGUI nameText;
     [HideInInspector] public EnemyHealth healthSystem;
-    [HideInInspector] public EnemyUIManager UISystem;
 
     /// <summary>
     /// Setups all components for the script to work and sends a starting message for new enemy.
@@ -20,13 +19,12 @@ public class EnemyPhraseManager : MonoBehaviour
     {
         healthSystem = GetComponent<EnemyHealth>();
         ChatManager.instance.SystemMessage("Brace yourself! New challenger incoming!");
-        UISystem = GetComponent<EnemyUIManager>();
-        player = FindAnyObjectByType<Player>();    
+        player = FindAnyObjectByType<Player>();
     }
 
     public void ManagePhrases()
     {
-        UsePhrase(phraseList[Random.Range(0, phraseList.Count)]);
+        UsePhrase(ListUtils.GetRandomItem(phraseList));
         GetNewPhrases();
     }
     private void UsePhrase(Phrase phraseToUse)
@@ -35,19 +33,19 @@ public class EnemyPhraseManager : MonoBehaviour
         switch (phraseToUse.type)
         {
             case PhraseType.DEFENCE:
-                healthSystem.ReturnHealth(phraseToUse.phraseEffect);
+                healthSystem.ReturnHealth(Mathf.RoundToInt(phraseToUse.phraseEffect * healthSystem.scaleMultiplier));
                 break;
             case PhraseType.ATTACK:
-                player.healthSystem.TakeDamage(phraseToUse.phraseEffect);
+                player.healthSystem.TakeDamage(Mathf.RoundToInt(phraseToUse.phraseEffect * healthSystem.scaleMultiplier * 1.35f));
                 break;
             case PhraseType.BUFF:
                 healthSystem.Hittable = false;
+                healthSystem.ReturnHealth(5);
                 break;
             default:
                 break;
         }
         ChatManager.instance.ManageMessage("Enemy", $"{phraseToUse.phrase}");
-        UISystem.ManageShield(healthSystem.Hittable);
     }
     private void GetNewPhrases()
     {

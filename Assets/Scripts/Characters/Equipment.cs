@@ -14,5 +14,10 @@ public class Equipment
     [SerializeField] public int combatPowerPerUpgrade = 2;
     [SerializeField] public Sprite icon;
     [SerializeField] public string iconPath;
+
+    public bool IsMaxLevel()
+    {
+        return level >= maxLevel;
+    }
 }
 

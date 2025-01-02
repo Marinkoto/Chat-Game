@@ -11,10 +11,21 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     [Header("Stats")]
     [SerializeField] public int currentHealth;
 
-    public static event Action OnHit;
-
+    public static UnityEvent OnHit = new UnityEvent();
+    public static UnityEvent OnHealthChange = new UnityEvent();
+    public static UnityEvent OnDeath = new UnityEvent();
     public bool Hittable { get; set; }
-    
+
+    private void OnEnable()
+    {
+        EnemyHealth.OnDeath.AddListener(() => ReturnHealth(50));
+    }
+    private void OnDisable()
+    {
+        OnHit.RemoveAllListeners();
+        OnHealthChange.RemoveAllListeners();
+        OnDeath.RemoveAllListeners();
+    }
     public void Initialize()
     {
         phraseSystem = GetComponent<PlayerPhraseManager>();
@@ -33,7 +44,7 @@ public class PlayerHealth : MonoBehaviour, IDamagable
         }
         StartCoroutine(EffectManager.instance.PlayerHitEffect());
         currentHealth -= damage;
-        if (currentHealth <= 0)
+        if (IsDead())
             Die();
     }
 
@@ -41,11 +52,16 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     {
         currentHealth = Mathf.Min(currentHealth + healthToReturn, phraseSystem.selectedCharacter.maxHealth);
         EffectManager.instance.ChatEffect();
+        OnHealthChange?.Invoke();
+    }
+    private bool IsDead()
+    {
+        return currentHealth <= 0;
     }
 
     public void Die()
     {
-        ChatManager.instance.SystemMessage("Looks like you've been defeated... but hey, at least you tried XD!");
+        OnDeath?.Invoke();
         BattleSystem.instance.state = BattleState.End;
     }
 }

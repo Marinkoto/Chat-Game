@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public static class LoadingSystem
@@ -12,15 +14,17 @@ public static class LoadingSystem
         if (File.Exists(path))
         {
             string encryptedJson = File.ReadAllText(path);
-            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, SavingSystem.ENCRYPTIONKEY);
+            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, SavingSystem.ENCRYPTION_KEY);
             CharacterData character = JsonUtility.FromJson<CharacterData>(decryptedJson);
             character.icon = Resources.Load<Sprite>(character.iconPath);
             character.phrases = Resources.LoadAll<Phrase>($"Phrases/{characterName}").ToList();
             character.weapon = LoadEquipment(character.weapon);
             return character;
         }
-        MenuManager.instance.UpdateGamePanel();
-        return null;
+        else
+        {
+            return null;
+        }
     }
     public static UserData LoadUserData(string key)
     {
@@ -28,10 +32,11 @@ public static class LoadingSystem
         if (File.Exists(path))
         {
             string encryptedJson = File.ReadAllText(path);
-            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, SavingSystem.ENCRYPTIONKEY);
+            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson, SavingSystem.ENCRYPTION_KEY);
             UserData playerData = JsonUtility.FromJson<UserData>(decryptedJson);
             return playerData;
         }
+        MenuManager.instance.UpdateGamePanel();
         return new UserData();
     }
 
@@ -41,7 +46,7 @@ public static class LoadingSystem
         if (File.Exists(path))
         {
             string encryptedJson = File.ReadAllText(path);
-            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson,SavingSystem.ENCRYPTIONKEY);
+            string decryptedJson = EncryptionSystem.Decrypt(encryptedJson,SavingSystem.ENCRYPTION_KEY);
             Equipment loadedEquipment = JsonUtility.FromJson<Equipment>(decryptedJson);
             loadedEquipment.icon = Resources.Load<Sprite>(loadedEquipment.iconPath);
             return loadedEquipment;

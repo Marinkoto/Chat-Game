@@ -16,3 +16,4 @@ MonoBehaviour:
   type: 1
   phraseEffect: 23
   icon: {fileID: -154968644, guid: 878e40d740fb2fa49b975c1fc235b66c, type: 3}
+  description: Player attacks enemy for (23)DMG.

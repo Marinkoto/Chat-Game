@@ -19,17 +19,12 @@ public class PlayerUIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerHealth.OnHit += () => ManageShield(healthSystem.Hittable); 
-    }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnHit -= () => ManageShield(healthSystem.Hittable); 
+        PlayerHealth.OnHit.AddListener(() => ManageShield(healthSystem.Hittable));
     }
 
     public void Initialize()
     {
-        InitializeHealthBar();
+        SliderUtils.SetupSlider(healthBar, healthSystem.currentHealth, healthSystem.currentHealth);
     }
 
     public void HealthBarAnimation()
@@ -53,13 +48,6 @@ public class PlayerUIManager : MonoBehaviour
             return;
         shield.SetBool("Active", !state);
     }
-
-    private void InitializeHealthBar()
-    {
-        healthBar.maxValue = phraseSystem.selectedCharacter.maxHealth;
-        healthBar.value = healthSystem.currentHealth;
-    }
-    
     public void SetPhraseInfo(int index)
     {
         phraseButtons[index].GetComponentInChildren<TextMeshProUGUI>().text =

@@ -17,3 +17,4 @@ MonoBehaviour:
   type: 2
   phraseEffect: 0
   icon: {fileID: -2030645520, guid: 878e40d740fb2fa49b975c1fc235b66c, type: 3}
+  description: Player activates shield for one turn and gets back (10)HP.

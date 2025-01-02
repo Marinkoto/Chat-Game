@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayerBattleHandler : MonoBehaviour
@@ -11,16 +14,29 @@ public class PlayerBattleHandler : MonoBehaviour
     [Header("Components")]
     [SerializeField] Slider timer;
 
-    private const float PLAYERTIMELIMIT = 10;
+    public static UnityEvent OnTimerTick = new UnityEvent();
+    public static UnityEvent OnTimerEnd = new UnityEvent();
+    private const float PLAYER_TIME_LIMIT = 20;
     public bool PlayerMadeChoice { get; set; }
-   
+    private CancellationTokenSource timerCancellationSource;
+
+    private void OnDisable()
+    {
+        CancelTimer();
+        OnTimerTick.RemoveAllListeners();
+        OnTimerEnd.RemoveAllListeners();
+    }
+
     public async Task HandlePlayerTurn()
     {
         player.UISystem.ManagePanel(true);
         PlayerMadeChoice = false;
 
+        CancelTimer();
+        timerCancellationSource = new CancellationTokenSource();
+
         var playerTurnTask = WaitUntilPlayerSelectsPhrase();
-        var timerTask = StartPlayerTimer(PLAYERTIMELIMIT);
+        var timerTask = ManagePlayerTimer(PLAYER_TIME_LIMIT, timerCancellationSource.Token);
         var completedTask = await Task.WhenAny(playerTurnTask, timerTask);
 
         if (completedTask == playerTurnTask)
@@ -28,37 +44,34 @@ public class PlayerBattleHandler : MonoBehaviour
             PlayerMadeChoice = true;
         }
 
+        timerCancellationSource.Cancel();
         player.UISystem.ManagePanel(false);
         player.UISystem.ManageShield(player.healthSystem.Hittable);
+
         BattleSystem.instance.state = BattleState.EnemyTurn;
     }
-    private async Task StartPlayerTimer(float timeLimit)
+    private async Task ManagePlayerTimer(float timeLimit, CancellationToken cancellationToken)
     {
         float timeRemaining = timeLimit;
         timer.maxValue = timeLimit;
         timer.value = timeLimit;
 
-        float lastUpdateTime = Time.unscaledTime;
-
         while (timeRemaining > 0 && !PlayerMadeChoice)
         {
-            await Task.Delay(100);
+            await Task.Delay(1000, cancellationToken);
 
-            if (PauseMenu.isPaused)
-            {
-                lastUpdateTime = Time.unscaledTime;
-                continue;
-            }
+            await PauseMenu.WaitWhilePaused();
 
-            float elapsed = Time.unscaledTime - lastUpdateTime;
-            timeRemaining -= elapsed;
+            timeRemaining--;
+            SliderUtils.ChangeColorByValue(timer, new Color(1, 0.075f, 0.075f), 5f);
             timer.value = Mathf.Max(0, timeRemaining);
-            lastUpdateTime = Time.unscaledTime;
+            OnTimerTick?.Invoke();
         }
 
         if (timeRemaining <= 0 && !PlayerMadeChoice)
         {
-            player.phraseSystem.onPhraseSelected.RemoveAllListeners();
+            PlayerPhraseManager.OnPhraseSelected.RemoveAllListeners();
+            OnTimerEnd?.Invoke();
             ChatManager.instance.SystemMessage("Looks like somebody is AFK...");
         }
     }
@@ -70,11 +83,15 @@ public class PlayerBattleHandler : MonoBehaviour
         void onPhraseSelected()
         {
             taskCompletionSource.SetResult(true);
-            player.phraseSystem.onPhraseSelected.RemoveListener(onPhraseSelected);
+            PlayerPhraseManager.OnPhraseSelected.RemoveListener(onPhraseSelected);
         }
 
-        player.phraseSystem.onPhraseSelected.AddListener(onPhraseSelected);
+        PlayerPhraseManager.OnPhraseSelected.AddListener(onPhraseSelected);
 
         return taskCompletionSource.Task;
+    }
+    private void CancelTimer()
+    {
+        timerCancellationSource?.Cancel();
     }
 }

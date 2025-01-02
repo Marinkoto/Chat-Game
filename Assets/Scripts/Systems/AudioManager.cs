@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : MonoBehaviour,ISoundPlayer
 {
     [Header("Audios")]
     [SerializeField] private AudioClip[] sounds;
-    [SerializeField] public AudioSource buttonSource;
+    public AudioSource Source { get; set; }
+    [SerializeField] public AudioSource MusicSource;
     public static AudioManager instance;
 
     private void Awake()
@@ -24,12 +25,17 @@ public class AudioManager : MonoBehaviour
     }
     private void Start()
     {
-        buttonSource = this.AddComponent<AudioSource>();
+        InitializeSoundPlayer();
+    }
+    public void InitializeSoundPlayer()
+    {
+        Source = this.AddComponent<AudioSource>();
+        Source.volume = 0.75f;
     }
     public void PlaySound(string soundName, AudioSource source, bool randomisePitch)
     {
         AudioClip sound = GetSoundByName(soundName);
-        if (source != null && source.isActiveAndEnabled)
+        if (source != null && source.isActiveAndEnabled && !source.isPlaying)
         {
             if (randomisePitch)
             {

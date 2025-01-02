@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface ISoundPlayer
 {
-    void PlaySound(string sound);
+    AudioSource Source { get; set; }
+    void InitializeSoundPlayer();
 }

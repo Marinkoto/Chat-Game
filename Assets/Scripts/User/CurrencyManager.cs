@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class CurrencyManager
 {
-    public static void RecieveCurrency(int amount, UserData playerData)
+    public static void AddCurrency(int amount, UserData playerData)
     {
         playerData.currency += amount;
     }

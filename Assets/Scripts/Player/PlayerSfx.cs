@@ -1,25 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+using static Unity.VisualScripting.Member;
 
-public class PlayerSfx : MonoBehaviour
+public class PlayerSfx : MonoBehaviour, ISoundPlayer
 {
-    [Header("Components")]
-    [SerializeField] private AudioSource source;
-
+    public AudioSource Source { get; set; }
+    public AudioSource HealthSource { get; set; }
     private void OnEnable()
     {
-        PlayerHealth.OnHit += () => AudioManager.instance.PlaySound("Player Hit", source, true);
+        EventUtils.AddListeners(new Dictionary<UnityEvent, Action>
+        {
+            { PlayerHealth.OnHealthChange, () => AudioManager.instance.PlaySound("Heal", HealthSource, false) },
+            { PlayerHealth.OnHit, () => AudioManager.instance.PlaySound("Hit", HealthSource, true) },
+            { PlayerBattleHandler.OnTimerTick, () => AudioManager.instance.PlaySound("Timer Tick", Source, true) },
+            { PlayerBattleHandler.OnTimerEnd, () => AudioManager.instance.PlaySound("Timer End", Source, false) }
+        });
     }
-    private void OnDisable()
+    private void Start()
     {
-        PlayerHealth.OnHit -= () => AudioManager.instance.PlaySound("Player Hit", source, true);
+        InitializeSoundPlayer();
+        AudioManager.instance.MusicSource.volume = 0.05f;
     }
-
-    private void Awake()
+    public void InitializeSoundPlayer()
     {
-        source = this.AddComponent<AudioSource>();
+        Source = this.AddComponent<AudioSource>();
+        Source.volume = 0.75f;
+        HealthSource = this.AddComponent<AudioSource>();
     }
-
 }

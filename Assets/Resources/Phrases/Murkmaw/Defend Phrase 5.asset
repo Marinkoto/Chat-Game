@@ -16,3 +16,4 @@ MonoBehaviour:
   type: 0
   phraseEffect: 19
   icon: {fileID: -1061268449, guid: 878e40d740fb2fa49b975c1fc235b66c, type: 3}
+  description: Player recieves back (19)HP.

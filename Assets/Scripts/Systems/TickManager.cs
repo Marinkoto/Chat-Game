@@ -20,8 +20,9 @@ public class TickManager : MonoBehaviour
         }
         else
         {
-            Destroy(instance);
+            Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()

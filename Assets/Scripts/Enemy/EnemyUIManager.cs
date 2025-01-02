@@ -17,13 +17,9 @@ public class EnemyUIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EnemyHealth.OnHit += OnEnemyHitHandler;
+        EnemyHealth.OnHit.AddListener(() => ManageShield(healthSystem.Hittable));
     }
 
-    private void OnDisable()
-    {
-        EnemyHealth.OnHit -= OnEnemyHitHandler;
-    }
     public void HealthBarAnimation()
     {
         if(healthBar != null)
@@ -36,7 +32,7 @@ public class EnemyUIManager : MonoBehaviour
     {
         healthSystem = GetComponent<EnemyHealth>();
         SetHUD();
-        InitializeHealthBar();
+        SliderUtils.SetupSlider(healthBar, healthSystem.currentHealth, healthSystem.maxHealth);
     }
     /// <summary>
     /// Sets name and icon for enemy
@@ -47,19 +43,10 @@ public class EnemyUIManager : MonoBehaviour
         icon.sprite = enemyData.icon;
         healthText.text = $"{healthSystem.currentHealth}/{healthSystem.maxHealth}";
     }
-    private void InitializeHealthBar()
-    {
-        healthBar.maxValue = healthSystem.maxHealth;
-        healthBar.value = healthSystem.currentHealth;
-    }
     public void ManageShield(bool state)
     {
         if (shield == null)
             return;
         shield.SetBool("Active",!state);
-    }
-    private void OnEnemyHitHandler()
-    {
-        ManageShield(healthSystem.Hittable);
     }
 }

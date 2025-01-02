@@ -34,7 +34,7 @@ public class ButtonUtils : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        AudioManager.instance.PlaySound("Button Switch", AudioManager.instance.buttonSource, false);
+        AudioManager.instance.PlaySound("Button Switch", AudioManager.instance.Source, false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -44,6 +44,10 @@ public class ButtonUtils : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        AudioManager.instance.PlaySound("Button Click", AudioManager.instance.buttonSource, true);
+        AudioManager.instance.PlaySound("Button Click", AudioManager.instance.Source, false);
+    }
+    public void ManageObjectByButton(GameObject gameObject)
+    {
+        gameObject.SetActive(!gameObject.activeSelf);
     }
 }

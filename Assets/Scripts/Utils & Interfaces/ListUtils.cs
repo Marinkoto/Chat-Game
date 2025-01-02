@@ -21,4 +21,8 @@ public static class ListUtils
         int randomIndex = UnityEngine.Random.Range(0, list.Count);
         return list[randomIndex];
     }
+    public static T GetItemByIndex<T>(this IList<T> list,int index)
+    {
+        return list[index];
+    }
 }

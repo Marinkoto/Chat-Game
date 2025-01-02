@@ -12,8 +12,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] Button[] characterOptions;
     [SerializeField] TextMeshProUGUI userStats;
     [SerializeField] GameObject updatePanel;
-
-    public UserData Data { get; set; }
+    [SerializeField] Button urlButton;
 
     public static MenuManager instance;
 
@@ -31,15 +30,16 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
-        Data = UserManager.instance.Data;
         SetupExitButtons();
+        SetupUrlButton();
         CharacterUIManager.SetupCharacterSelection(characterOptions);
+        AudioManager.instance.MusicSource.volume = 0.2f;
     }
     public void UpdateUserStats()
     {
-        userStats.text = $"Level: {Data.level}\n" +
-            $"Combat Power: {Data.combatPower}\n" +
-            $"Currency: {Data.currency}\n";
+        userStats.text = $"Level: {UserManager.instance.data.level}\n" +
+            $"Combat Power: {UserManager.instance.data.combatPower}\n" +
+            $"Currency: {UserManager.instance.data.currency}\n";
     }
     private void SetupExitButtons()
     {
@@ -47,6 +47,10 @@ public class MenuManager : MonoBehaviour
         {
             button.onClick.AddListener(() => SceneSystem.ExitGame());
         }
+    }
+    private void SetupUrlButton()
+    {
+        urlButton.onClick.AddListener(() => UrlManager.OpenUrl("https://margata.itch.io/phrase-fighters/rate"));
     }
     public void UpdateGamePanel()
     {

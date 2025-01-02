@@ -13,11 +13,12 @@ public class CharacterDataManager : MonoBehaviour
     [SerializeField] public CharacterData selectedCharacter;
 
     public static CharacterDataManager instance;
-    public static event Action OnCharacterUpgrade;
+    public static UnityEvent OnCharacterUpgrade = new UnityEvent();
 
     private void OnDisable()
     {
         SavingSystem.SaveAllCharacters(characters);
+        OnCharacterUpgrade.RemoveAllListeners();
     }
     private void OnEnable()
     {
@@ -41,16 +42,24 @@ public class CharacterDataManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void UpgradeCharacter()
+    public void UpgradeCharacter(UserData data)
     {
-        if (CurrencyManager.HasCurrency(UserManager.instance.Data, characters[CharacterUIManager.CurrentCharacterIndex].costToUpgrade))
+        CharacterData currentCharacter = characters[CharacterUIManager.CurrentCharacterIndex];
+        if (CurrencyManager.HasCurrency(data, currentCharacter.costToUpgrade)
+            && currentCharacter.IsMaxLevel() == false)
         {
-            CurrencyManager.RemoveCurrency(characters[CharacterUIManager.CurrentCharacterIndex].costToUpgrade, UserManager.instance.Data);
-            characters[CharacterUIManager.CurrentCharacterIndex].maxHealth += 1;
-            UserManager.instance.Data.combatPower += 1;
-            characters[CharacterUIManager.CurrentCharacterIndex].costToUpgrade += 50;
-            SavingSystem.SaveCharacter(characters[CharacterUIManager.CurrentCharacterIndex]);
+            CurrencyManager.RemoveCurrency(currentCharacter.costToUpgrade, data);
+            currentCharacter.maxHealth += 1;
+            data.combatPower += 1;
+            currentCharacter.level++;
+            currentCharacter.costToUpgrade += 50;
+            SavingSystem.SaveCharacter(currentCharacter);
             OnCharacterUpgrade?.Invoke();
+            ExperienceManager.instance.AddExperience(UnityEngine.Random.Range(50,100));
         }
+    }
+    public int GetCharacterCount()
+    {
+        return characters.Count;
     }
 }
