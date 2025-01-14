@@ -48,7 +48,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void LoadMenu()
     {
-        SceneSystem.LoadScene(SceneSystem.GetCurrentScene() - 1);
+        SceneSystem.LoadScene(0);
     }
     public static async Task WaitWhilePaused()
     {

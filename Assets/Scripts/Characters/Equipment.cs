@@ -11,7 +11,7 @@ public class Equipment
     [SerializeField] public int upgradeCost = 150;
     [SerializeField] public int level = 1;
     [SerializeField] public int maxLevel = 20;
-    [SerializeField] public int combatPowerPerUpgrade = 2;
+    [SerializeField] public int combatPowerPerUpgrade = 4;
     [SerializeField] public Sprite icon;
     [SerializeField] public string iconPath;
 

@@ -30,7 +30,7 @@ public class EnemyHealth : MonoBehaviour, IDamagable
         EnemyUISystem = GetComponent<EnemyUIManager>();
         currentHealth = EnemyUISystem.enemyData.health;
         maxHealth = EnemyUISystem.enemyData.maxHealth;
-        ScaleStats(CharacterDataManager.instance.selectedCharacter);
+        ScaleStats(CharacterDataManager.Instance.selectedCharacter);
         Hittable = true;
     }
 
@@ -38,7 +38,7 @@ public class EnemyHealth : MonoBehaviour, IDamagable
     {
         currentHealth = Mathf.Min(currentHealth + healthToReturn, maxHealth);
         EnemyUISystem.SetHUD();
-        EffectManager.instance.ChatEffect();
+        EffectManager.Instance.ChatEffect();
         OnHealthChange?.Invoke();
     }
 
@@ -53,7 +53,7 @@ public class EnemyHealth : MonoBehaviour, IDamagable
         }
 
         currentHealth -= damage;
-        EffectManager.instance.ChatEffect();
+        EffectManager.Instance.ChatEffect();
         EnemyUISystem.SetHUD();
         if (IsDead())
             Die();

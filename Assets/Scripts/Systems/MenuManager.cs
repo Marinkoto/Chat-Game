@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour
+public class MenuManager : Singleton<MenuManager>
 {
     [Header("Components")]
     [SerializeField] Button[] exitButtons;
@@ -13,33 +13,22 @@ public class MenuManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI userStats;
     [SerializeField] GameObject updatePanel;
     [SerializeField] Button urlButton;
-
-    public static MenuManager instance;
-
-    private void Awake()
+    public override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        isPersistent = false;
     }
-
     private void Start()
     {
         SetupExitButtons();
         SetupUrlButton();
         CharacterUIManager.SetupCharacterSelection(characterOptions);
-        AudioManager.instance.MusicSource.volume = 0.2f;
+        AudioManager.Instance.MusicSource.volume = 0.2f;
     }
     public void UpdateUserStats()
     {
-        userStats.text = $"Level: {UserManager.instance.data.level}\n" +
-            $"Combat Power: {UserManager.instance.data.combatPower}\n" +
-            $"Currency: {UserManager.instance.data.currency}\n";
+        userStats.text = $"Level: {UserManager.Instance.data.level}\n" +
+            $"Combat Power: {UserManager.Instance.data.combatPower}\n" +
+            $"Currency: {UserManager.Instance.data.currency}\n";
     }
     private void SetupExitButtons()
     {

@@ -7,18 +7,23 @@ public class SystemMessage : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI message;
-    private void Start()
+    private void Awake()
     {
         message = GetComponent<TextMeshProUGUI>();
     }
     private void OnEnable()
     {
-        TickManager.instance.RegisterTimedTick(0.1f, () =>
-        EffectManager.instance.TextRainbowEffect(message));
+        if (message != null)
+        {
+            TickManager.Instance.RegisterTimedTick(0.1f, RainbowEffect);
+        }
     }
     private void OnDisable()
     {
-        TickManager.instance.UnregisterTimedTick(() =>
-        EffectManager.instance.TextRainbowEffect(message));
+        TickManager.Instance.UnregisterTimedTick(RainbowEffect);
+    }
+    private void RainbowEffect()
+    {
+        EffectManager.Instance.TextRainbowEffect(message);
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static System.Net.Mime.MediaTypeNames;
 
-public class ChatManager : MonoBehaviour
+public class ChatManager : Singleton<ChatManager>
 {
     [Header("Components")]
     [SerializeField] GameObject chatContent;
@@ -20,7 +20,7 @@ public class ChatManager : MonoBehaviour
 
     public static UnityEvent OnMessageSent = new UnityEvent();
 
-    public static ChatManager instance;
+
     private void OnEnable()
     {
         BattleSystem.OnGameEnd.AddListener(() => SystemMessage("Game Ended. Continue with a new one!"));
@@ -29,21 +29,10 @@ public class ChatManager : MonoBehaviour
         EnemyBattleHandler.OnEnemiesDead.AddListener(() => SystemMessage("You won! It's time for you dance!"));
         PlayerHealth.OnDeath.AddListener(() => SystemMessage("Looks like you've been defeated... but hey, at least you tried XD!"));
     }
+
     private void OnDisable()
     {
         OnMessageSent.RemoveAllListeners();
-    }
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(instance);
-        }
     }
 
     public void ManageMessage(string sender, string message)

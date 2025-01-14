@@ -18,7 +18,7 @@ public class EnemyPhraseManager : MonoBehaviour
     public void Initialize()
     {
         healthSystem = GetComponent<EnemyHealth>();
-        ChatManager.instance.SystemMessage("Brace yourself! New challenger incoming!");
+        ChatManager.Instance.SystemMessage("Brace yourself! New challenger incoming!");
         player = FindAnyObjectByType<Player>();
     }
 
@@ -45,7 +45,7 @@ public class EnemyPhraseManager : MonoBehaviour
             default:
                 break;
         }
-        ChatManager.instance.ManageMessage("Enemy", $"{phraseToUse.phrase}");
+        ChatManager.Instance.ManageMessage("Enemy", $"{phraseToUse.phrase}");
     }
     private void GetNewPhrases()
     {

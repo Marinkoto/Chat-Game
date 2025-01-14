@@ -6,13 +6,12 @@ using TMPro;
 using System;
 using UnityEngine.Events;
 
-public class CharacterDataManager : MonoBehaviour
+public class CharacterDataManager : Singleton<CharacterDataManager>
 {
     [Header("Character Data")]
     [SerializeField] public List<CharacterData> characters;
     [SerializeField] public CharacterData selectedCharacter;
 
-    public static CharacterDataManager instance;
     public static UnityEvent OnCharacterUpgrade = new UnityEvent();
 
     private void OnDisable()
@@ -24,19 +23,6 @@ public class CharacterDataManager : MonoBehaviour
     {
         LoadingSystem.LoadAllCharacters(characters);
     }
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -50,12 +36,12 @@ public class CharacterDataManager : MonoBehaviour
         {
             CurrencyManager.RemoveCurrency(currentCharacter.costToUpgrade, data);
             currentCharacter.maxHealth += 1;
-            data.combatPower += 1;
+            data.combatPower += 3;
             currentCharacter.level++;
             currentCharacter.costToUpgrade += 50;
             SavingSystem.SaveCharacter(currentCharacter);
             OnCharacterUpgrade?.Invoke();
-            ExperienceManager.instance.AddExperience(UnityEngine.Random.Range(50,100));
+            ExperienceManager.Instance.AddExperience(UnityEngine.Random.Range(50, 100));
         }
     }
     public int GetCharacterCount()

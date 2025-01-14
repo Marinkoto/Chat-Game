@@ -2,29 +2,17 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TickManager : MonoBehaviour
-{
-    public static TickManager instance;
-
+public class TickManager : Singleton<TickManager>
+{ 
     // Per-frame tickables
     private readonly List<ITickable> tickables = new();
 
     // Timed ticks for interval-based updates
     private readonly List<TimedTick> timedTicks = new();
-
-    private void Awake()
+    public override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
+        base.Awake();
     }
-
     private void Update()
     {
         float deltaTime = Time.deltaTime;
@@ -63,11 +51,6 @@ public class TickManager : MonoBehaviour
             tickables.Add(tickable);
     }
 
-    public void Unregister(ITickable tickable)
-    {
-        tickables.Remove(tickable);
-    }
-
     public void RegisterTimedTick(float interval, Action tickAction)
     {
         if (tickAction == null) 
@@ -76,8 +59,25 @@ public class TickManager : MonoBehaviour
         timedTicks.Add(new TimedTick(interval, tickAction));
     }
 
+    public void Unregister(ITickable tickable)
+    {
+        if (tickable == null)
+        {
+            Debug.LogWarning("Attempted to unregister a null ITickable.");
+            return;
+        }
+
+        tickables.Remove(tickable);
+    }
+
     public void UnregisterTimedTick(Action tickAction)
     {
+        if (tickAction == null)
+        {
+            Debug.LogWarning("Attempted to unregister a null Action.");
+            return;
+        }
+
         timedTicks.RemoveAll(tick => tick.TickAction == tickAction);
     }
 

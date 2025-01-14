@@ -1,34 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class UserManager : MonoBehaviour
+public class UserManager : Singleton<UserManager>
 {
     public UserData data;
-
-    public static UserManager instance;
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         data = LoadingSystem.LoadUserData(UserData.SAVE_KEY);   
-        DontDestroyOnLoad(gameObject);
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            instance = this;
-        }
     }
     private void OnDisable()
     {
         SavingSystem.SavePlayerData(data);
 
-        ExperienceManager.instance.OnExperienceChange -= HandleExperienceChange;
+        ExperienceManager.Instance.OnExperienceChange -= HandleExperienceChange;
     }
     private void Start()
     {
-        ExperienceManager.instance.OnExperienceChange += HandleExperienceChange;
+        ExperienceManager.Instance.OnExperienceChange += HandleExperienceChange;
     }
     private void HandleExperienceChange(int newExperience)
     {

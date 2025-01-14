@@ -29,7 +29,7 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     public void Initialize()
     {
         phraseSystem = GetComponent<PlayerPhraseManager>();
-        currentHealth = CharacterDataManager.instance.selectedCharacter.maxHealth;
+        currentHealth = CharacterDataManager.Instance.selectedCharacter.maxHealth;
         Hittable = true;
     }
 
@@ -42,7 +42,7 @@ public class PlayerHealth : MonoBehaviour, IDamagable
             OnHit?.Invoke();
             return;
         }
-        StartCoroutine(EffectManager.instance.PlayerHitEffect());
+        StartCoroutine(EffectManager.Instance.PlayerHitEffect());
         currentHealth -= damage;
         if (IsDead())
             Die();
@@ -50,11 +50,12 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
     public void ReturnHealth(int healthToReturn)
     {
-        currentHealth = Mathf.Min(currentHealth + healthToReturn, phraseSystem.selectedCharacter.maxHealth);
-        EffectManager.instance.ChatEffect();
+        int healthToAdd = Mathf.RoundToInt(healthToReturn * (UserManager.Instance.data.combatPower / 250f) * 1.65f);
+        currentHealth = Mathf.Min(currentHealth + healthToAdd, phraseSystem.selectedCharacter.maxHealth);
+        EffectManager.Instance.ChatEffect();
         OnHealthChange?.Invoke();
     }
-    private bool IsDead()
+    public bool IsDead()
     {
         return currentHealth <= 0;
     }
@@ -62,6 +63,6 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     public void Die()
     {
         OnDeath?.Invoke();
-        BattleSystem.instance.state = BattleState.End;
+        BattleSystem.Instance.state = BattleState.End;
     }
 }

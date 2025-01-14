@@ -3,26 +3,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour,ISoundPlayer
+public class AudioManager : Singleton<AudioManager>,ISoundPlayer
 {
     [Header("Audios")]
     [SerializeField] private AudioClip[] sounds;
     public AudioSource Source { get; set; }
     [SerializeField] public AudioSource MusicSource;
-    public static AudioManager instance;
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
-    }
+    
     private void Start()
     {
         InitializeSoundPlayer();

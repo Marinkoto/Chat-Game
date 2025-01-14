@@ -5,27 +5,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class EquipmentUIManager : MonoBehaviour
+public class EquipmentUIManager : Singleton<EquipmentUIManager>
 {
     [Header("Components")]
     [SerializeField] TextMeshProUGUI equipmentStats;
     [SerializeField] Button upgradeButton;
     [SerializeField] Image itemIcon;
-
-    public static EquipmentUIManager instance;
-
-    private void Awake()
+    public override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        isPersistent = false;
     }
-
     public void UpdateUI(Equipment equipment)
     {
         equipmentStats.text = $"{equipment.name}" +
@@ -45,6 +34,6 @@ public class EquipmentUIManager : MonoBehaviour
     public void SetButtonUpgrade(Equipment equipment)
     {
         upgradeButton.onClick.RemoveAllListeners();
-        upgradeButton.onClick.AddListener(() => EquipmentDataManager.instance.UpdateEquipment(equipment,UserManager.instance.data));
+        upgradeButton.onClick.AddListener(() => EquipmentDataManager.Instance.UpdateEquipment(equipment,UserManager.Instance.data));
     }
 }

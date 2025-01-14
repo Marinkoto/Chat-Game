@@ -51,10 +51,10 @@ public class PlayerUIManager : MonoBehaviour
     public void SetPhraseInfo(int index)
     {
         phraseButtons[index].GetComponentInChildren<TextMeshProUGUI>().text =
-            CharacterDataManager.instance.selectedCharacter.phrases[index].phrase;
-        phraseIcons[index].sprite = CharacterDataManager.instance.selectedCharacter.phrases[index].icon;
+            CharacterDataManager.Instance.selectedCharacter.phrases[index].phrase;
+        phraseIcons[index].sprite = CharacterDataManager.Instance.selectedCharacter.phrases[index].icon;
         phrasesInfo[index].GetComponentInChildren<TextMeshProUGUI>(true).text = 
-            CharacterDataManager.instance.selectedCharacter.phrases[index].description;
+            CharacterDataManager.Instance.selectedCharacter.phrases[index].description;
     }
 
     public void SetPlayerIcon()
@@ -64,8 +64,8 @@ public class PlayerUIManager : MonoBehaviour
 
     public void SetupPhrasesUI()
     {
-        CharacterDataManager.instance.selectedCharacter.phrases.Shuffle();
-        int phraseCount = Mathf.Min(phraseButtons.Length, CharacterDataManager.instance.selectedCharacter.phrases.Count);
+        CharacterDataManager.Instance.selectedCharacter.phrases.Shuffle();
+        int phraseCount = Mathf.Min(phraseButtons.Length, CharacterDataManager.Instance.selectedCharacter.phrases.Count);
         for (int i = 0; i < phraseCount; i++)
         {
             SetPhraseInfo(i);

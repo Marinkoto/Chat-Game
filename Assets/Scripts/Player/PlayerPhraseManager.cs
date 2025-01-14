@@ -16,7 +16,7 @@ public class PlayerPhraseManager : MonoBehaviour
 
     public void Initialize()
     {
-        selectedCharacter = CharacterDataManager.instance.selectedCharacter;
+        selectedCharacter = CharacterDataManager.Instance.selectedCharacter;
         healthSystem = GetComponent<PlayerHealth>();
         UISystem = GetComponent<PlayerUIManager>();
         for (int i = 0; i < UISystem.phraseButtons.Length; i++)
@@ -40,7 +40,7 @@ public class PlayerPhraseManager : MonoBehaviour
                 healthSystem.ReturnHealth(newPhrase.phraseEffect);
                 break;
             case PhraseType.ATTACK:
-                enemy.healthSystem.TakeDamage((int)(Mathf.RoundToInt(newPhrase.phraseEffect * UserManager.instance.data.combatPower) * 0.01f));
+                enemy.healthSystem.TakeDamage(newPhrase.GetPhraseDamage());
                 break;
             case PhraseType.BUFF:
                 healthSystem.Hittable = false;
@@ -50,6 +50,6 @@ public class PlayerPhraseManager : MonoBehaviour
                 break;
         }
         OnPhraseSelected?.Invoke();
-        ChatManager.instance.ManageMessage("You", $"{newPhrase.phrase}");
+        ChatManager.Instance.ManageMessage("You", $"{newPhrase.phrase}");
     }
 }

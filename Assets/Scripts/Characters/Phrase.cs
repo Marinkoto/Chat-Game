@@ -13,4 +13,9 @@ public class Phrase : ScriptableObject
     [SerializeField] public int phraseEffect;
     [SerializeField] public Sprite icon;
     [SerializeField, TextArea] public string description;
+
+    public int GetPhraseDamage()
+    {
+        return Mathf.RoundToInt(phraseEffect * (UserManager.Instance.data.combatPower / 250f) * 1.75f);
+    }
 }

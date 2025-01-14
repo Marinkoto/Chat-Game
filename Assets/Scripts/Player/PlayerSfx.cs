@@ -14,16 +14,16 @@ public class PlayerSfx : MonoBehaviour, ISoundPlayer
     {
         EventUtils.AddListeners(new Dictionary<UnityEvent, Action>
         {
-            { PlayerHealth.OnHealthChange, () => AudioManager.instance.PlaySound("Heal", HealthSource, false) },
-            { PlayerHealth.OnHit, () => AudioManager.instance.PlaySound("Hit", HealthSource, true) },
-            { PlayerBattleHandler.OnTimerTick, () => AudioManager.instance.PlaySound("Timer Tick", Source, true) },
-            { PlayerBattleHandler.OnTimerEnd, () => AudioManager.instance.PlaySound("Timer End", Source, false) }
+            { PlayerHealth.OnHealthChange, () => AudioManager.Instance.PlaySound("Heal", HealthSource, false) },
+            { PlayerHealth.OnHit, () => AudioManager.Instance.PlaySound("Hit", HealthSource, true) },
+            { PlayerBattleHandler.OnTimerTick, () => AudioManager.Instance.PlaySound("Timer Tick", Source, true) },
+            { PlayerBattleHandler.OnTimerEnd, () => AudioManager.Instance.PlaySound("Timer End", Source, false) }
         });
     }
     private void Start()
     {
         InitializeSoundPlayer();
-        AudioManager.instance.MusicSource.volume = 0.05f;
+        AudioManager.Instance.MusicSource.volume = 0.05f;
     }
     public void InitializeSoundPlayer()
     {

@@ -36,7 +36,7 @@ public static class LoadingSystem
             UserData playerData = JsonUtility.FromJson<UserData>(decryptedJson);
             return playerData;
         }
-        MenuManager.instance.UpdateGamePanel();
+        MenuManager.Instance.UpdateGamePanel();
         return new UserData();
     }
 

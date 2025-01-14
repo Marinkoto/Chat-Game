@@ -22,11 +22,11 @@ public class CharacterUIManager : MonoBehaviour
     [SerializeField] Image mainImage;
 
     public static int CurrentCharacterIndex { get; set; } = 0;
-
+    
     private void OnEnable()
     {
         upgradeButton.onClick.AddListener(
-            () => CharacterDataManager.instance.UpgradeCharacter(UserManager.instance.data));
+            () => CharacterDataManager.Instance.UpgradeCharacter(UserManager.Instance.data));
         CharacterDataManager.OnCharacterUpgrade.AddListener(UpdateCarousel);
     }
     void Start()
@@ -43,16 +43,22 @@ public class CharacterUIManager : MonoBehaviour
     }
     public static void SelectCharacter(int index)
     {
-        CharacterData character = CharacterDataManager.instance.characters[index];
-        CharacterDataManager.instance.selectedCharacter = character;
-        SceneSystem.LoadScene(1);
+        CharacterData character = CharacterDataManager.Instance.characters[index];
+        CharacterDataManager.Instance.selectedCharacter = character;
+        if (UserManager.Instance.data.tutorialCompleted)
+        {
+            SceneSystem.LoadScene(1);
+        }
+        else
+        {
+            SceneSystem.LoadScene(2);
+        }
     }
 
     public void UpdateCarousel()
     {
         CharacterData currentCharacter = GetCharacterByIndex(CurrentCharacterIndex);
-        UpdateStats(currentCharacter);
-        ManageEquipment(currentCharacter);
+        ManageCharacter(currentCharacter);
         SetIcon(mainImage, currentCharacter.icon, 0.5f);
         SetIcon(iconImage, currentCharacter.icon,1);
 
@@ -71,14 +77,15 @@ public class CharacterUIManager : MonoBehaviour
             image.color = new Color(1f, 1f, 1f, alpha);
         }
     }
-    private void ManageEquipment(CharacterData character)
+    private void ManageCharacter(CharacterData character)
     {
-        EquipmentUIManager.instance.UpdateUI(character.weapon);
-        EquipmentUIManager.instance.SetButtonUpgrade(character.weapon);
+        EquipmentUIManager.Instance.UpdateUI(character.weapon);
+        EquipmentUIManager.Instance.SetButtonUpgrade(character.weapon);
+        UpdateStats(character);
     }
     private void UpdateStats(CharacterData currentCharacter)
     {
-        nameText.text = currentCharacter.name;
+        nameText.text = $"{currentCharacter.name}  {UserManager.Instance.data.combatPower} CP";
         statsText.text = $"Health: {currentCharacter.maxHealth}\n" +
             $"Level : {currentCharacter.level}/{currentCharacter.maxLevel}";
         if (currentCharacter.IsMaxLevel() == false)
@@ -95,7 +102,7 @@ public class CharacterUIManager : MonoBehaviour
 
     private CharacterData GetCharacterByIndex(int index)
     {
-        return ListUtils.GetItemByIndex(CharacterDataManager.instance.characters, index);
+        return ListUtils.GetItemByIndex(CharacterDataManager.Instance.characters, index);
     }
     public void NextCharacter()
     {
@@ -110,10 +117,10 @@ public class CharacterUIManager : MonoBehaviour
     }
     public int GetPreviousCharacter()
     {
-        return (CurrentCharacterIndex - 1 + CharacterDataManager.instance.GetCharacterCount()) % CharacterDataManager.instance.GetCharacterCount();
+        return (CurrentCharacterIndex - 1 + CharacterDataManager.Instance.GetCharacterCount()) % CharacterDataManager.Instance.GetCharacterCount();
     }
     public int GetNextCharacter()
     {
-        return (CurrentCharacterIndex + 1) % CharacterDataManager.instance.GetCharacterCount();
+        return (CurrentCharacterIndex + 1) % CharacterDataManager.Instance.GetCharacterCount();
     }
 }

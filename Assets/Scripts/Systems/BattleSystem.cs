@@ -10,14 +10,13 @@ using UnityEngine.UI;
 
 public enum BattleState { End, PlayerTurn, EnemyTurn }
 
-public class BattleSystem : MonoBehaviour
+public class BattleSystem : Singleton<BattleSystem>
 {
     [Header("References")]
     [SerializeField] public BattleState state;
     [SerializeField] public PlayerBattleHandler playerHandler;
-    [SerializeField] private EnemyBattleHandler enemyHandler;
+    [SerializeField] public EnemyBattleHandler enemyHandler;
 
-    public static BattleSystem instance;
     public static UnityEvent OnGameEnd = new UnityEvent();
     public CharacterData SelectedCharacter { get; private set; }
     private void OnDisable()
@@ -25,17 +24,10 @@ public class BattleSystem : MonoBehaviour
         OnGameEnd.RemoveAllListeners();
     }
 
-    private void Awake()
+    public override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(instance);
-        }
-        SelectedCharacter = CharacterDataManager.instance.selectedCharacter;
+        isPersistent = false;
+        SelectedCharacter = CharacterDataManager.Instance.selectedCharacter;    
     }
     private void Start()
     {
@@ -46,7 +38,7 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.PlayerTurn;
         StartBattleLoop();
-        enemyHandler.EnemyUpdate(UserManager.instance.data);
+        enemyHandler.EnemyUpdate(UserManager.Instance.data);
         enemyHandler.SpawnEnemy();
     }
 
@@ -68,8 +60,8 @@ public class BattleSystem : MonoBehaviour
     }
     public void EndGame()
     {
-        ExperienceManager.instance.AddExperience(UserManager.instance.data.level * 150);
-        CurrencyManager.AddCurrency(UserManager.instance.data.level * 250, UserManager.instance.data);
+        ExperienceManager.Instance.AddExperience(UserManager.Instance.data.level * 150);
+        CurrencyManager.AddCurrency(UserManager.Instance.data.level * 450, UserManager.Instance.data);
         OnGameEnd?.Invoke();
     }
 }

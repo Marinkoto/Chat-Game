@@ -32,7 +32,6 @@ public class PlayerBattleHandler : MonoBehaviour
         player.UISystem.ManagePanel(true);
         PlayerMadeChoice = false;
 
-        CancelTimer();
         timerCancellationSource = new CancellationTokenSource();
 
         var playerTurnTask = WaitUntilPlayerSelectsPhrase();
@@ -44,11 +43,11 @@ public class PlayerBattleHandler : MonoBehaviour
             PlayerMadeChoice = true;
         }
 
-        timerCancellationSource.Cancel();
+        CancelTimer();
         player.UISystem.ManagePanel(false);
         player.UISystem.ManageShield(player.healthSystem.Hittable);
 
-        BattleSystem.instance.state = BattleState.EnemyTurn;
+        BattleSystem.Instance.state = BattleState.EnemyTurn;
     }
     private async Task ManagePlayerTimer(float timeLimit, CancellationToken cancellationToken)
     {
@@ -72,7 +71,7 @@ public class PlayerBattleHandler : MonoBehaviour
         {
             PlayerPhraseManager.OnPhraseSelected.RemoveAllListeners();
             OnTimerEnd?.Invoke();
-            ChatManager.instance.SystemMessage("Looks like somebody is AFK...");
+            ChatManager.Instance.SystemMessage("Looks like somebody is AFK...");
         }
     }
 
@@ -90,7 +89,7 @@ public class PlayerBattleHandler : MonoBehaviour
 
         return taskCompletionSource.Task;
     }
-    private void CancelTimer()
+    public void CancelTimer()
     {
         timerCancellationSource?.Cancel();
     }

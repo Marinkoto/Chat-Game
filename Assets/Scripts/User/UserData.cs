@@ -16,5 +16,7 @@ public class UserData
     [Header("Game Data")]
     [SerializeField] public int combatPower = 250;
     [SerializeField] public int wins = 0;
+    [SerializeField] public bool tutorialCompleted = false;
     [SerializeField] public static readonly string SAVE_KEY = "PlayerSettings";
+
 }

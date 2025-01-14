@@ -9,14 +9,14 @@ public class CurrencyUIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI currencyText;
     private void Start()
     {
-        TickManager.instance.RegisterTimedTick(0.75f,UpdateUI);
+        TickManager.Instance.RegisterTimedTick(0.75f,UpdateUI);
     }
     private void OnDisable()
     {
-        TickManager.instance.UnregisterTimedTick(UpdateUI);
+        TickManager.Instance.UnregisterTimedTick(UpdateUI);
     }
     private void UpdateUI()
     {
-        currencyText.text = UserManager.instance.data.currency.ToString();
+        currencyText.text = UserManager.Instance.data.currency.ToString();
     }
 }

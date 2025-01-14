@@ -15,11 +15,11 @@ public class Player : MonoBehaviour,ITickable
 
     private void OnEnable()
     {
-        TickManager.instance.Register(this);
+        TickManager.Instance.Register(this);
     }
     private void OnDisable()
     {
-        TickManager.instance.Unregister(this);
+        TickManager.Instance.Unregister(this);
     }
 
     private void SetupPlayer()

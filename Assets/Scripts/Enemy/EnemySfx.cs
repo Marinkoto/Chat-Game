@@ -13,7 +13,7 @@ namespace Assets.Scripts.Enemy
         public AudioSource Source { get; set; }
         private void OnEnable()
         {
-            EnemyHealth.OnHealthChange.AddListener(() => AudioManager.instance.PlaySound("Heal", Source, false));
+            EnemyHealth.OnHealthChange.AddListener(() => AudioManager.Instance.PlaySound("Heal", Source, false));
         }
         private void Awake()
         {

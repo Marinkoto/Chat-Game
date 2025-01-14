@@ -4,27 +4,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class EffectManager : MonoBehaviour
+public class EffectManager : Singleton<EffectManager>
 {
     [Header("Components")]
     [SerializeField] GameObject[] chatEffects;
     [SerializeField] public Volume chatVolume;
-    public static EffectManager instance;
 
     //Used for rainbow effect to track ticks
     public int TickCount { get; set; } = 0;
-    private void Awake()
+    public override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        isPersistent = false;
+        base.Awake();
     }
-
     public void ChatEffect()
     {
         Vector3 randPos = new(Random.Range(-5, 5), Random.Range(-3, 5));

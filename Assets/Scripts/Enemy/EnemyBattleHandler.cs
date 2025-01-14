@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,16 +9,20 @@ public class EnemyBattleHandler : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Enemy enemy;
-    [SerializeField] private List<GameObject> enemies;
+    [SerializeField] public List<GameObject> enemies;
+
     public static UnityEvent OnEnemiesDead = new UnityEvent();
 
+    private CancellationTokenSource turnCancellationSource;
     public int EnemyIndex { get; set; } = 0;
 
     public async Task HandleEnemyTurn()
     {
+        CancelTimer();
+        turnCancellationSource = new CancellationTokenSource();
         await PauseMenu.WaitWhilePaused();
-        await Task.Delay(2000);
-        BattleSystem.instance.state = BattleState.PlayerTurn;
+        await Task.Delay(2000, turnCancellationSource.Token);
+        BattleSystem.Instance.state = BattleState.PlayerTurn;
         if (enemy.healthSystem.IsDead())
         {
             ManageEnemies();
@@ -32,14 +37,14 @@ public class EnemyBattleHandler : MonoBehaviour
         enemies.RemoveAt(EnemyIndex);
         if (enemies.Count > 0)
         {
-            BattleSystem.instance.state = BattleState.EnemyTurn;
+            BattleSystem.Instance.state = BattleState.EnemyTurn;
             SpawnEnemy();
         }
         else
         {
             OnEnemiesDead?.Invoke();
-            UserManager.instance.data.wins++;
-            BattleSystem.instance.state = BattleState.End;
+            UserManager.Instance.data.wins++;
+            BattleSystem.Instance.state = BattleState.End;
         }
     }
     public void SpawnEnemy()
@@ -53,5 +58,9 @@ public class EnemyBattleHandler : MonoBehaviour
     {
         ListUtils.Shuffle(enemies);
         enemies.RemoveRange(0, enemies.Count - data.level);
+    }
+    private void CancelTimer()
+    {
+        turnCancellationSource?.Cancel();
     }
 }

@@ -9,9 +9,9 @@ public class BattleSfx : MonoBehaviour, ISoundPlayer
     public AudioSource GameSource { get; set; }
     private void OnEnable()
     {
-        ChatManager.OnMessageSent.AddListener(() => AudioManager.instance.PlaySound("Message", Source, false));
-        EnemyBattleHandler.OnEnemiesDead.AddListener(() => AudioManager.instance.PlaySound("Game Win", GameSource, false));
-        PlayerHealth.OnDeath.AddListener(() => AudioManager.instance.PlaySound("Game Lose", GameSource, false));
+        ChatManager.OnMessageSent.AddListener(() => AudioManager.Instance.PlaySound("Message", Source, false));
+        EnemyBattleHandler.OnEnemiesDead.AddListener(() => AudioManager.Instance.PlaySound("Game Win", GameSource, false));
+        PlayerHealth.OnDeath.AddListener(() => AudioManager.Instance.PlaySound("Game Lose", GameSource, false));
     }
     private void Start()
     {

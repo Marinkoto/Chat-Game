@@ -14,9 +14,9 @@ public class SavingSystem
         File.WriteAllText(Application.persistentDataPath + "/" + character.name + ".json", encryptedJson);
         SaveEquipment(character.weapon);
     }
-    public static void SavePlayerData(UserData playerData)
+    public static void SavePlayerData(UserData userData)
     {
-        string json = JsonUtility.ToJson(playerData);
+        string json = JsonUtility.ToJson(userData);
         string encryptedJson = EncryptionSystem.Encrypt(json, ENCRYPTION_KEY);
         File.WriteAllText(Application.persistentDataPath + "/" + UserData.SAVE_KEY + ".json", encryptedJson);;
     }
